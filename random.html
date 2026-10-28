@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>随机站点 · 一页工作台</title>
+  <meta name="description" content="从学习与开发站点中随机抽取一个目的地，用一点点偶然打开新的页面。">
+  <meta name="theme-color" content="#f5f0e4">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/common.js"></script>
+  <script defer src="js/random.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="curtain curtain--compact" aria-hidden="true">
+    <div class="curtain-inner">
+      <div class="curtain-brand">
+        <img class="curtain-art" src="assets/curtain-doodle.svg" alt="" width="190" height="56">
+        <span class="curtain-wordmark">
+          <strong>一页工作台</strong>
+          <small>STUDY LEDGER · NO. 07</small>
+        </span>
+      </div>
+      <div class="curtain-stitch"><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <header class="page-meta shell" aria-label="页眉信息栏">
+    <a class="back-link" href="index.html">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-arrow-left"></use></svg>
+      返回主页
+    </a>
+    <span class="meta-divider" aria-hidden="true"></span>
+    <span class="meta-page-title">随机站点</span>
+    <span class="meta-spacer"></span>
+    <span class="meta-clock-inline">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-clock"></use></svg>
+      <time data-clock-time>--:--:--</time>
+    </span>
+    <span class="meta-mini-date" data-clock-date>今天</span>
+  </header>
+
+  <main class="shell page-main" id="main">
+    <header class="page-heading">
+      <p class="eyebrow">DRAW A PAGE · RANDOM SITE</p>
+      <h1>随机站点</h1>
+      <svg class="sketch-underline" viewBox="0 0 310 10" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2 6.7C53 3 95 8.4 144 5.2c48-3.1 91 2.6 164-1.1"></path>
+        <path d="M16 8.3c60-2.4 103 1.3 158-.7 36-1.3 70-1.1 112-.3" opacity=".45"></path>
+      </svg>
+      <p>学累了就翻一页。签筒里收着一些学习与开发站点，抽到哪一页就去看看，遇到不认识的再回来。</p>
+    </header>
+
+    <section class="paper-panel random-panel" aria-labelledby="randomTitle">
+      <p class="eyebrow random-panel__eyebrow" id="randomTitle">FROM THE NOTEBOOK</p>
+
+      <div class="random-status" id="randomStatus" aria-live="polite">
+        等待抽取 · 签筒里收着 <span id="randomSiteCount">0</span> 个站点
+      </div>
+
+      <div class="random-drum">
+        <div class="random-result" id="randomResult" aria-live="polite">
+          <span class="random-result__mark" aria-hidden="true">
+            <svg class="icon"><use href="assets/icons.svg#icon-shuffle"></use></svg>
+          </span>
+          <span class="random-result__name" id="randomName">下一站，去哪里？</span>
+          <p class="random-result__desc" id="randomDescription">点击下方按钮，从签筒里抽出一个学习或开发站点。</p>
+          <span class="random-result__url" id="randomUrl"></span>
+        </div>
+
+        <div class="random-countdown" id="randomCountdown" hidden>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-clock"></use></svg>
+          <span id="randomCountdownText">3 秒后离开本页</span>
+          <button class="btn btn--link" id="cancelJumpBtn" type="button">留在这里</button>
+        </div>
+      </div>
+
+      <div class="random-actions">
+        <button class="btn btn--primary random-main-btn" id="drawBtn" type="button">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-shuffle"></use></svg>
+          <span id="drawBtnLabel">抽一个站点</span>
+        </button>
+      </div>
+
+      <p class="random-note">
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-external"></use></svg>
+        会离开当前工作台，并在同一标签页打开目标站点
+      </p>
+
+      <div class="random-panel__footer">
+        <span class="status-dot" aria-hidden="true"></span>
+        随机数来自 crypto.getRandomValues · 仅收录学习与开发站点
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer shell">
+    <div class="site-footer__brand">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-book"></use></svg>
+      一页工作台 <span class="text-faint">· STUDY LEDGER</span>
+    </div>
+    <div class="site-footer__note">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-shuffle"></use></svg>
+      <span>偶然的一页 · <span data-current-year>2026</span></span>
+    </div>
+  </footer>
+</body>
+</html>

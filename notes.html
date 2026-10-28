@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Aster 知识库 · 一页工作台</title>
+  <meta name="description" content="Aster 是本地个人知识库：Markdown、KaTeX、可自定义思维导图、文件夹与命令面板，适合算法、课程与零散知识。">
+  <meta name="theme-color" content="#f5f0e4">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/common.js"></script>
+  <script defer src="js/notes.js"></script>
+  <script defer src="js/notes-mindmap.js"></script>
+</head>
+<body class="aster-page">
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="curtain curtain--compact" aria-hidden="true">
+    <div class="curtain-inner">
+      <div class="curtain-brand">
+        <img class="curtain-art" src="assets/curtain-doodle.svg" alt="" width="190" height="56">
+        <span class="curtain-wordmark">
+          <strong>一页工作台</strong>
+          <small>STUDY LEDGER · NO. 07</small>
+        </span>
+      </div>
+      <div class="curtain-stitch"><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <header class="page-meta shell notes-page-meta" aria-label="页眉信息栏">
+    <a class="back-link" href="index.html">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-arrow-left"></use></svg>
+      返回主页
+    </a>
+    <span class="meta-divider" aria-hidden="true"></span>
+    <span class="meta-page-title">Aster 知识库</span>
+    <span class="meta-spacer"></span>
+    <span class="meta-clock-inline">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-clock"></use></svg>
+      <time data-clock-time>--:--:--</time>
+    </span>
+    <span class="meta-mini-date" data-clock-date>今天</span>
+  </header>
+
+  <main class="shell page-main notes-page" id="main">
+    <header class="page-heading aster-heading">
+      <p class="eyebrow">ASTER · PERSONAL KNOWLEDGE BASE</p>
+      <h1>Aster</h1>
+      <svg class="sketch-underline" viewBox="0 0 310 10" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2 6.7C53 3 95 8.4 144 5.2c48-3.1 91 2.6 164-1.1"></path>
+        <path d="M16 8.3c60-2.4 103 1.3 158-.7 36-1.3 70-1.1 112-.3" opacity=".45"></path>
+      </svg>
+      <p>个人知识库，收算法、课程与零散知识。写下 Markdown，公式交给 KaTeX；标题和列表会长成一张可编辑的思维导图。</p>
+      <span class="heading-note">
+        <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-database"></use></svg>
+        本地 IndexedDB · 自动保存 · 自定义导图 · Ctrl K 命令面板
+      </span>
+    </header>
+
+    <section class="paper-panel notes-app" id="notesApp" data-pane="editor" aria-label="Aster 知识库工作台">
+      <div class="notes-topbar">
+        <button class="btn notes-library-toggle" id="libraryToggle" type="button" aria-controls="notesSidebar" aria-expanded="false">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg>
+          知识库
+        </button>
+
+        <label class="visually-hidden" for="noteTitle">当前笔记标题</label>
+        <input class="notes-title-field" id="noteTitle" type="text" maxlength="100" placeholder="未命名笔记" autocomplete="off">
+
+        <div class="notes-topbar__actions">
+          <span class="save-status" id="saveStatus" aria-live="polite">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-check"></use></svg>
+            已保存
+          </span>
+
+          <button class="btn btn--small notes-action-btn" id="importNoteBtn" type="button" title="导入本地 Markdown 或文本文件">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-upload"></use></svg>
+            导入
+          </button>
+
+          <button class="btn btn--small notes-delete-btn" id="deleteNoteBtn" type="button" title="删除当前笔记">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-trash"></use></svg>
+            删除
+          </button>
+
+          <details class="mini-menu" data-menu>
+            <summary>
+              <svg class="icon icon--sm" aria-hidden="true"><use href="assets/icons.svg#icon-spark"></use></svg>
+              问 AI
+              <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-down"></use></svg>
+            </summary>
+            <div class="menu-panel">
+              <p class="menu-panel__label">复制题目并打开</p>
+              <a class="menu-item" href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer" data-ai-platform="DeepSeek">
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-spark"></use></svg>
+                DeepSeek
+                <span class="menu-item__desc">推理</span>
+              </a>
+              <a class="menu-item" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" data-ai-platform="ChatGPT">
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-message"></use></svg>
+                ChatGPT
+                <span class="menu-item__desc">对话</span>
+              </a>
+              <a class="menu-item" href="https://www.kimi.com/" target="_blank" rel="noopener noreferrer" data-ai-platform="Kimi">
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-moon"></use></svg>
+                Kimi
+                <span class="menu-item__desc">长文</span>
+              </a>
+              <p class="tool-index__foot">优先复制编辑框中选中的文字</p>
+            </div>
+          </details>
+
+          <details class="mini-menu" data-menu>
+            <summary>
+              <svg class="icon icon--sm" aria-hidden="true"><use href="assets/icons.svg#icon-download"></use></svg>
+              导出
+              <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-down"></use></svg>
+            </summary>
+            <div class="menu-panel">
+              <p class="menu-panel__label">导出当前笔记</p>
+              <button class="menu-item" type="button" id="exportMarkdownBtn">
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-download"></use></svg>
+                导出 Markdown
+                <span class="menu-item__desc">.md</span>
+              </button>
+              <button class="menu-item" type="button" id="exportHtmlBtn">
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-code"></use></svg>
+                导出独立 HTML
+                <span class="menu-item__desc">带排版</span>
+              </button>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <div class="inline-confirm" id="inlineDeleteBar" role="alertdialog" aria-labelledby="inlineDeleteText" hidden>
+        <span class="inline-confirm__text" id="inlineDeleteText">确定删除这篇笔记？删除后无法恢复。</span>
+        <div class="inline-confirm__actions">
+          <button class="btn btn--small btn--danger" id="inlineDeleteConfirm" type="button">删除</button>
+          <button class="btn btn--small" id="inlineDeleteCancel" type="button">取消</button>
+        </div>
+      </div>
+
+      <div class="notes-layout">
+        <button class="notes-scrim" id="notesScrim" type="button" aria-label="关闭知识库侧栏"></button>
+
+        <aside class="notes-sidebar" id="notesSidebar" aria-label="Aster 知识库侧栏">
+          <div class="notes-sidebar__top">
+            <span class="section-label">ASTER / 知识库</span>
+            <button class="btn btn--primary btn--small notes-new-btn" id="newNoteBtn" type="button">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
+              新建
+            </button>
+          </div>
+
+          <div class="notes-search">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg>
+            <label class="visually-hidden" for="noteSearch">搜索笔记</label>
+            <input class="input" id="noteSearch" type="search" placeholder="搜索标题、正文或标签…" autocomplete="off">
+          </div>
+
+          <div class="notes-search-scope" id="searchScopeToggle" role="group" aria-label="搜索范围">
+            <button type="button" data-search-scope="folder" class="is-active" aria-pressed="true">当前文件夹</button>
+            <button type="button" data-search-scope="all" aria-pressed="false">全部</button>
+          </div>
+
+          <section class="folder-tree" aria-labelledby="folderTreeTitle">
+            <div class="folder-tree__head">
+              <span class="section-label" id="folderTreeTitle">FOLDERS / 文件夹</span>
+              <button class="folder-add-btn" id="newFolderBtn" type="button" aria-label="新建文件夹" title="新建文件夹">
+                <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-folder-plus"></use></svg>
+              </button>
+            </div>
+            <div class="folder-tree__list" id="folderTree"></div>
+            <form class="folder-new" id="newFolderForm" hidden>
+              <label class="visually-hidden" for="newFolderInput">新文件夹名称</label>
+              <input class="input" id="newFolderInput" type="text" maxlength="80" placeholder="文件夹名称" autocomplete="off">
+              <button class="btn btn--primary btn--small" type="submit">建</button>
+              <button class="btn btn--small" id="newFolderCancel" type="button">取消</button>
+            </form>
+          </section>
+
+          <div class="notes-tag-filter" id="tagFilters" aria-label="按标签筛选"></div>
+          <ul class="note-list" id="noteList" aria-busy="true">
+            <li class="note-skeleton" aria-hidden="true"><span></span><span></span><span></span></li>
+            <li class="note-skeleton" aria-hidden="true"><span></span><span></span><span></span></li>
+            <li class="note-skeleton" aria-hidden="true"><span></span><span></span><span></span></li>
+          </ul>
+
+          <div class="notes-sidebar__foot">
+            <span id="noteCount" aria-live="polite"></span>
+            <button class="btn btn--link" id="sampleNoteBtn" type="button">载入示例</button>
+          </div>
+        </aside>
+
+        <section class="notes-editor" aria-label="当前笔记编辑区">
+          <div class="notes-tag-row">
+            <label class="notes-tag-row__label" for="noteTags">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-tag"></use></svg>
+              标签
+            </label>
+                  <input class="notes-tag-input" id="noteTags" type="text" maxlength="180" placeholder="用逗号分隔，例如：图论, 最短路" autocomplete="off">
+            <div class="notes-tag-chips" id="noteTagChips"></div>
+            <label class="notes-folder-field" for="noteFolder">
+              <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-folder"></use></svg>
+              文件夹
+            </label>
+            <input class="notes-folder-input" id="noteFolder" type="text" maxlength="80" list="folderOptions" placeholder="未分类" autocomplete="off">
+            <datalist id="folderOptions"></datalist>
+          </div>
+
+          <div class="editor-tabs" role="tablist" aria-label="编辑、预览与思维导图切换">
+            <button class="editor-tab is-active" id="editorTab" type="button" role="tab" aria-selected="true" aria-controls="editorPane" data-pane-target="editor">编辑 Markdown</button>
+            <button class="editor-tab" id="previewTab" type="button" role="tab" aria-selected="false" aria-controls="previewPane" data-pane-target="preview">预览公式</button>
+            <button class="editor-tab" id="mindmapTab" type="button" role="tab" aria-selected="false" aria-controls="mindmapView" data-pane-target="mindmap">
+              <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-layers"></use></svg>
+              思维导图
+            </button>
+          </div>
+
+          <div class="editor-split">
+            <div class="editor-pane" id="editorPane" role="tabpanel" aria-labelledby="editorTab">
+              <div class="editor-toolbar" aria-label="公式与格式工具条">
+                <div class="toolbar-group">
+                  <span class="toolbar-label">公式</span>
+                  <button class="insert-btn" type="button" data-insert="fraction" title="插入分数模板">分数</button>
+                  <button class="insert-btn" type="button" data-insert="sqrt" title="插入根号模板">根号</button>
+                  <button class="insert-btn" type="button" data-insert="supsub" title="插入上下标模板">上下标</button>
+                  <button class="insert-btn" type="button" data-insert="integral" title="插入积分模板">积分</button>
+                  <button class="insert-btn" type="button" data-insert="sum" title="插入求和模板">求和</button>
+                  <details class="toolbar-more" data-menu>
+                    <summary class="insert-btn" title="更多公式命令">更多</summary>
+                    <div class="toolbar-more__panel">
+                      <button class="insert-btn" type="button" data-insert="matrix">矩阵</button>
+                      <button class="insert-btn" type="button" data-insert="limit">极限</button>
+                      <button class="insert-btn" type="button" data-insert="aligned">对齐</button>
+                      <button class="insert-btn" type="button" data-insert="cases">分段</button>
+                      <button class="insert-btn" type="button" data-insert="greek">希腊</button>
+                    </div>
+                  </details>
+                </div>
+                <span class="toolbar-divider" aria-hidden="true"></span>
+                <div class="toolbar-group toolbar-group--format">
+                  <span class="toolbar-label">格式</span>
+                  <button class="insert-btn" type="button" data-format="display-math" title="把选中文字变成独立公式">独立</button>
+                  <button class="insert-btn" type="button" data-format="inline-math" title="把选中文字变成行内公式">行内</button>
+                  <button class="format-btn" type="button" data-format="bold" aria-label="加粗" title="加粗"><strong>B</strong></button>
+                  <button class="format-btn" type="button" data-format="italic" aria-label="斜体" title="斜体"><em>I</em></button>
+                  <button class="format-btn" type="button" data-format="strike" aria-label="删除线" title="删除线"><s>S</s></button>
+                  <button class="format-btn" type="button" data-format="underline" aria-label="下划线" title="下划线"><u>U</u></button>
+                </div>
+                <span class="toolbar-divider" aria-hidden="true"></span>
+                <div class="toolbar-group toolbar-group--colors">
+                  <span class="toolbar-label">颜色</span>
+                  <button class="color-btn color-btn--ink" type="button" data-color="ink" aria-label="墨蓝色文字" title="墨蓝"></button>
+                  <button class="color-btn color-btn--rust" type="button" data-color="rust" aria-label="棕红色文字" title="棕红"></button>
+                  <button class="color-btn color-btn--olive" type="button" data-color="olive" aria-label="橄榄绿文字" title="橄榄绿"></button>
+                  <button class="color-btn color-btn--mauve" type="button" data-color="mauve" aria-label="灰紫色文字" title="灰紫"></button>
+                </div>
+                <span class="toolbar-divider" aria-hidden="true"></span>
+                <button class="insert-btn insert-btn--wide" type="button" id="focusCheatBtn" title="打开 LaTeX 速查">速查</button>
+              </div>
+              <label class="visually-hidden" for="markdownInput">Markdown 与 LaTeX 编辑器</label>
+              <textarea class="markdown-input" id="markdownInput" spellcheck="false" placeholder="# 题目&#10;&#10;在这里写下题目、思路和推导。&#10;&#10;行内公式：$a^2+b^2=c^2$&#10;块级公式：&#10;$$\int_a^b f(x)\,dx$$" aria-label="Markdown 与 LaTeX 编辑器"></textarea>
+            </div>
+
+            <div class="preview-pane" id="previewPane" role="tabpanel" aria-labelledby="previewTab">
+              <div class="preview-head">
+                <span class="preview-head__label">
+                  <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye"></use></svg>
+                  实时预览
+                </span>
+                <div class="preview-head__actions">
+                  <span class="render-badge" id="renderBadge">正在加载渲染器…</span>
+                  <button class="preview-fullscreen-btn" id="previewFullscreenBtn" type="button" aria-pressed="false" title="预览全屏（Esc 退出）">
+                    <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-maximize"></use></svg>
+                    <span>全屏</span>
+                  </button>
+                </div>
+              </div>
+              <div class="preview-scroll" id="previewScroll">
+                <div class="render-notice" id="renderNotice" hidden></div>
+                <article class="markdown-body" id="previewContent" aria-live="polite"></article>
+              </div>
+            </div>
+          </div>
+
+          <section class="mindmap-view" id="mindmapView" role="tabpanel" aria-labelledby="mindmapTab" aria-label="笔记思维导图">
+            <div class="mindmap-head">
+              <div class="mindmap-head__copy">
+                <p class="eyebrow">ASTER MINDMAP · EDITABLE</p>
+                <h3>自定义知识树</h3>
+                <p id="mindmapStatus" aria-live="polite">还在等一页笔记。</p>
+              </div>
+              <div class="mindmap-actions">
+                <button class="btn btn--small" id="mindmapExpandAllBtn" type="button">
+                  <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
+                  展开全部
+                </button>
+                <button class="btn btn--small" id="mindmapCollapseAllBtn" type="button">
+                  <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-minus"></use></svg>
+                  全部折叠
+                </button>
+              </div>
+            </div>
+
+            <div class="mindmap-layout">
+              <div class="mindmap-canvas-wrap" id="mindmapCanvasWrap" tabindex="0" aria-label="思维导图画布，可横向滚动、点击节点并拖拽调整层级">
+                <div class="mindmap-canvas" id="mindmapCanvas">
+                  <svg class="mindmap-links" id="mindmapLinks" aria-hidden="true"></svg>
+                  <div class="mindmap-nodes" id="mindmapNodes"></div>
+                </div>
+              </div>
+
+              <aside class="mindmap-detail" id="mindmapDetail" aria-live="polite" aria-label="节点对应笔记内容">
+                <div class="mindmap-detail__head">
+                  <p class="section-label">NODE NOTES / 节点内容</p>
+                  <div class="mindmap-detail__head-actions">
+                    <span class="tag" id="mindmapDetailKind">等待选择</span>
+                    <button class="mindmap-detail__close" id="mindmapDetailCloseBtn" type="button" aria-label="关闭节点详情" title="关闭详情">
+                      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-x"></use></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="mindmap-detail__empty" id="mindmapDetailEmpty">
+                  <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-pen"></use></svg>
+                  <p>点击左侧任意节点，查看它对应的笔记段落与推导。</p>
+                  <small>公式和详细内容会在这里渲染；这只是本地笔记，不会发起在线 AI 请求。</small>
+                </div>
+                <div class="mindmap-detail__body-wrap" id="mindmapDetailBodyWrap" hidden>
+                  <div class="mindmap-node-editor" id="mindmapNodeEditor">
+                    <div class="mindmap-node-editor__row">
+                      <label for="mindmapNodeTitleInput">节点标题</label>
+                      <input class="input" id="mindmapNodeTitleInput" type="text" maxlength="120" autocomplete="off">
+                      <button class="btn btn--primary btn--small" id="mindmapSaveNodeBtn" type="button">保存</button>
+                    </div>
+                    <div class="mindmap-node-editor__actions">
+                      <button class="btn btn--small" id="mindmapAddChildBtn" type="button">
+                        <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
+                        添加子节点
+                      </button>
+                      <button class="btn btn--small mindmap-delete-node" id="mindmapDeleteNodeBtn" type="button">
+                        <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-trash"></use></svg>
+                        删除节点
+                      </button>
+                    </div>
+                    <p class="mindmap-node-editor__hint">拖动节点到另一个节点上可调整层级；修改会写回 Markdown 大纲。</p>
+                  </div>
+                  <h3 id="mindmapDetailTitle">—</h3>
+                  <p class="mindmap-detail__hint" id="mindmapDetailHint">来自当前笔记的对应章节</p>
+                  <article class="markdown-body mindmap-detail__body" id="mindmapDetailContent"></article>
+                  <p class="mindmap-detail__note">
+                    <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-database"></use></svg>
+                    内容读取自当前笔记，不调用在线 AI。
+                  </p>
+                </div>
+              </aside>
+            </div>
+          </section>
+
+          <details class="cheat-sheet" id="cheatSheet">
+            <summary>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-sigma"></use></svg>
+              LaTeX 速查 · 大学课程常用
+              <svg class="icon icon--tiny chevron" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-down"></use></svg>
+            </summary>
+            <div class="cheat-sheet__body">
+              <div class="latex-cheat-group">
+                <h4>基础运算</h4>
+                <div class="cheat-grid">
+                  <div class="cheat-item"><code>\frac{a}{b}</code><span>分数</span></div>
+                  <div class="cheat-item"><code>\sqrt{x}</code><span>平方根</span></div>
+                  <div class="cheat-item"><code>\sqrt[n]{x}</code><span>n 次根</span></div>
+                  <div class="cheat-item"><code>x_{i}^{2}</code><span>上下标</span></div>
+                  <div class="cheat-item"><code>\left( \frac{a}{b} \right)</code><span>自适应括号</span></div>
+                  <div class="cheat-item"><code>\left| x \right|</code><span>绝对值</span></div>
+                  <div class="cheat-item"><code>\lfloor x \rfloor</code><span>向下取整</span></div>
+                  <div class="cheat-item"><code>\lceil x \rceil</code><span>向上取整</span></div>
+                  <div class="cheat-item"><code>a \bmod b</code><span>取模</span></div>
+                  <div class="cheat-item"><code>a \equiv b \pmod{n}</code><span>模 n 同余</span></div>
+                </div>
+              </div>
+
+              <div class="latex-cheat-group">
+                <h4>关系与运算符</h4>
+                <div class="cheat-grid">
+                  <div class="cheat-item"><code>\le \ge \ne \approx \equiv</code><span>大小、不等与约等于</span></div>
+                  <div class="cheat-item"><code>\in \notin</code><span>属于 / 不属于</span></div>
+                  <div class="cheat-item"><code>\subset \subseteq</code><span>真子集 / 子集</span></div>
+                  <div class="cheat-item"><code>\cup \cap</code><span>并集 / 交集</span></div>
+                  <div class="cheat-item"><code>\forall \exists</code><span>任意 / 存在</span></div>
+                  <div class="cheat-item"><code>\Rightarrow \Leftrightarrow</code><span>推出 / 等价</span></div>
+                  <div class="cheat-item"><code>\to \leftarrow \leftrightarrow</code><span>方向箭头</span></div>
+                  <div class="cheat-item"><code>\propto</code><span>正比于</span></div>
+                </div>
+              </div>
+
+              <div class="latex-cheat-group">
+                <h4>希腊字母</h4>
+                <div class="cheat-grid">
+                  <div class="cheat-item"><code>\alpha \beta \gamma \delta</code><span>α、β、γ、δ</span></div>
+                  <div class="cheat-item"><code>\theta \lambda \mu \pi</code><span>θ、λ、μ、π</span></div>
+                  <div class="cheat-item"><code>\sigma \varphi \omega \rho</code><span>σ、φ、ω、ρ</span></div>
+                  <div class="cheat-item"><code>\varepsilon \phi \tau \xi \eta</code><span>变体与常用小写</span></div>
+                  <div class="cheat-item"><code>\Gamma \Delta \Theta \Lambda</code><span>Γ、Δ、Θ、Λ</span></div>
+                  <div class="cheat-item"><code>\Pi \Sigma \Phi \Omega</code><span>Π、Σ、Φ、Ω</span></div>
+                </div>
+              </div>
+
+              <div class="latex-cheat-group">
+                <h4>微积分</h4>
+                <div class="cheat-grid">
+                  <div class="cheat-item"><code>\lim_{x \to 0}</code><span>极限</span></div>
+                  <div class="cheat-item"><code>\frac{dy}{dx}</code><span>导数</span></div>
+                  <div class="cheat-item"><code>\frac{\partial f}{\partial x}</code><span>偏导数</span></div>
+                  <div class="cheat-item"><code>\int f(x)\,dx</code><span>不定积分</span></div>
+                  <div class="cheat-item"><code>\int_a^b f(x)\,dx</code><span>定积分</span></div>
+                  <div class="cheat-item"><code>\iint_D f(x,y)\,dA</code><span>二重积分</span></div>
+                  <div class="cheat-item"><code>\iiint_\Omega f\,dV</code><span>三重积分</span></div>
+                  <div class="cheat-item"><code>\sum_{i=1}^{n} a_i</code><span>求和</span></div>
+                  <div class="cheat-item"><code>\prod_{i=1}^{n} a_i</code><span>连乘</span></div>
+                  <div class="cheat-item"><code>\nabla f</code><span>梯度</span></div>
+                </div>
+              </div>
+
+              <div class="latex-cheat-group">
+                <h4>线性代数</h4>
+                <div class="cheat-grid">
+                  <div class="cheat-item"><code>\mathbf{A} = \begin{pmatrix} a &amp; b \\ c &amp; d \end{pmatrix}</code><span>矩阵</span></div>
+                  <div class="cheat-item"><code>\begin{vmatrix} a &amp; b \\ c &amp; d \end{vmatrix}</code><span>行列式</span></div>
+                  <div class="cheat-item"><code>\vec{v}</code><span>向量</span></div>
+                  <div class="cheat-item"><code>\mathbf{A}^{\mathsf{T}}</code><span>矩阵转置</span></div>
+                  <div class="cheat-item"><code>\mathbf{u} \cdot \mathbf{v}</code><span>点乘</span></div>
+                  <div class="cheat-item"><code>\mathbf{u} \times \mathbf{v}</code><span>叉乘</span></div>
+                  <div class="cheat-item"><code>\det \mathbf{A}</code><span>行列式值</span></div>
+                  <div class="cheat-item"><code>\lambda \mathbf{v} = \mathbf{A}\mathbf{v}</code><span>特征值方程</span></div>
+                </div>
+              </div>
+
+              <div class="latex-cheat-group">
+                <h4>概率统计</h4>
+                <div class="cheat-grid">
+                  <div class="cheat-item"><code>E[X]</code><span>期望</span></div>
+                  <div class="cheat-item"><code>\operatorname{Var}(X)</code><span>方差</span></div>
+                  <div class="cheat-item"><code>X \sim N(\mu, \sigma^2)</code><span>正态分布</span></div>
+                  <div class="cheat-item"><code>\binom{n}{k}</code><span>组合数</span></div>
+                  <div class="cheat-item"><code>{}_nP_k</code><span>排列数</span></div>
+                  <div class="cheat-item"><code>P(A \mid B)</code><span>条件概率</span></div>
+                  <div class="cheat-item"><code>P(A \mid B) = \frac{P(A \cap B)}{P(B)}</code><span>条件概率公式</span></div>
+                  <div class="cheat-item"><code>\bar{x} \quad \sigma^2</code><span>样本均值 / 方差符号</span></div>
+                </div>
+              </div>
+
+              <div class="latex-cheat-group">
+                <h4>逻辑与集合</h4>
+                <div class="cheat-grid">
+                  <div class="cheat-item"><code>\land \lor \lnot</code><span>与 / 或 / 非</span></div>
+                  <div class="cheat-item"><code>\varnothing</code><span>空集</span></div>
+                  <div class="cheat-item"><code>A \subseteq B</code><span>子集</span></div>
+                  <div class="cheat-item"><code>A \cup B</code><span>并集</span></div>
+                  <div class="cheat-item"><code>A \cap B</code><span>交集</span></div>
+                  <div class="cheat-item"><code>A \setminus B</code><span>差集</span></div>
+                  <div class="cheat-item"><code>A^c</code><span>补集</span></div>
+                  <div class="cheat-item"><code>x \in A</code><span>属于集合</span></div>
+                </div>
+              </div>
+
+              <div class="latex-cheat-group">
+                <h4>排版与多行环境</h4>
+                <div class="cheat-grid">
+                  <div class="cheat-item"><code>\text{当 } x &gt; 0</code><span>公式内文字</span></div>
+                  <div class="cheat-item"><code>\mathbf{x}</code><span>加粗</span></div>
+                  <div class="cheat-item"><code>\mathit{x}</code><span>斜体</span></div>
+                  <div class="cheat-item"><code>\quad</code><span>插入空格</span></div>
+                  <div class="cheat-item"><code>\\</code><span>换行</span></div>
+                  <div class="cheat-item"><code>\begin{aligned} a &amp;= b \\ c &amp;= d \end{aligned}</code><span>对齐环境</span></div>
+                  <div class="cheat-item"><code>\begin{cases} x, &amp; x &gt; 0 \\ 0, &amp; x \le 0 \end{cases}</code><span>分段函数</span></div>
+                  <div class="cheat-item"><code>\begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 1 \end{bmatrix}</code><span>矩阵环境</span></div>
+                  <div class="cheat-item"><code>\displaystyle \sum_{i=1}^{n}</code><span>显示样式</span></div>
+                </div>
+              </div>
+            </div>
+          </details>
+        </section>
+
+        <div class="notes-empty-workspace">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-note"></use></svg>
+          <h2>还没有打开的一页</h2>
+          <p>新建一篇 Aster 笔记，把知识、思路和公式一起留在本子里。所有内容只保存在当前浏览器。</p>
+          <div class="button-row">
+            <button class="btn btn--primary" type="button" data-action="new-note">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
+              新建第一篇笔记
+            </button>
+            <button class="btn" type="button" data-action="load-sample">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-book"></use></svg>
+              载入示例
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="note-context" id="noteContextMenu" role="menu" aria-label="笔记操作" hidden>
+    <div class="note-context__panel" data-context-panel="root">
+      <p class="note-context__eyebrow">NOTE / 笔记</p>
+      <button class="note-context__item" type="button" role="menuitem" data-context-action="rename">
+        <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-pen"></use></svg>
+        重命名
+      </button>
+      <button class="note-context__item" type="button" role="menuitem" data-context-action="move">
+        <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-move"></use></svg>
+        移动到文件夹
+      </button>
+      <button class="note-context__item note-context__item--danger" type="button" role="menuitem" data-context-action="delete">
+        <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-trash"></use></svg>
+        删除
+      </button>
+    </div>
+    <div class="note-context__panel" data-context-panel="move" hidden>
+      <div class="note-context__move-head">
+        <button class="note-context__back" type="button" data-context-back aria-label="返回笔记操作">
+          <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-arrow-left"></use></svg>
+        </button>
+        <p class="note-context__eyebrow">MOVE / 移动到</p>
+      </div>
+      <div class="note-context__folders" id="contextFolderList"></div>
+      <form class="note-context__new-folder" id="contextNewFolderForm">
+        <label class="visually-hidden" for="contextNewFolderInput">新建文件夹并移入</label>
+        <input class="input" id="contextNewFolderInput" type="text" maxlength="80" placeholder="新建文件夹…" autocomplete="off">
+        <button class="btn btn--small btn--primary" type="submit">建并移入</button>
+      </form>
+    </div>
+  </div>
+
+  <input class="visually-hidden" id="importNoteFile" type="file" accept=".md,.txt,text/markdown,text/plain" tabindex="-1">
+
+  <footer class="site-footer shell notes-page-footer">
+    <div class="site-footer__brand">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-book"></use></svg>
+      一页工作台 <span class="text-faint">· STUDY LEDGER</span>
+    </div>
+    <div class="site-footer__note">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-database"></use></svg>
+      <span>Aster · IndexedDB 本地知识库 · <span data-current-year>2026</span></span>
+    </div>
+  </footer>
+</body>
+</html>

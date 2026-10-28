@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>时间显示 · 一页工作台</title>
+  <meta name="description" content="当前日期、星期、实时时钟与手账周数，每秒刷新。">
+  <meta name="theme-color" content="#f5f0e4">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/common.js"></script>
+  <script defer src="js/datetime.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="curtain curtain--compact" aria-hidden="true">
+    <div class="curtain-inner">
+      <div class="curtain-brand">
+        <img class="curtain-art" src="assets/curtain-doodle.svg" alt="" width="190" height="56">
+        <span class="curtain-wordmark">
+          <strong>一页工作台</strong>
+          <small>STUDY LEDGER · NO. 07</small>
+        </span>
+      </div>
+      <div class="curtain-stitch"><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <header class="page-meta shell" aria-label="页眉信息栏">
+    <a class="back-link" href="index.html">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-arrow-left"></use></svg>
+      返回主页
+    </a>
+    <span class="meta-divider" aria-hidden="true"></span>
+    <span class="meta-page-title">时间显示</span>
+    <span class="meta-spacer"></span>
+    <span class="meta-clock-inline">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-clock"></use></svg>
+      <time data-clock-time>--:--:--</time>
+    </span>
+    <span class="meta-mini-date" data-clock-date>今天</span>
+  </header>
+
+  <main class="shell page-main" id="main">
+    <header class="page-heading">
+      <p class="eyebrow">LOCAL TIME · EVERY SECOND</p>
+      <h1>时间显示</h1>
+      <svg class="sketch-underline" viewBox="0 0 310 10" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2 6.7C53 3 95 8.4 144 5.2c48-3.1 91 2.6 164-1.1"></path>
+        <path d="M16 8.3c60-2.4 103 1.3 158-.7 36-1.3 70-1.1 112-.3" opacity=".45"></path>
+      </svg>
+      <p>把此刻留在纸页上。模拟指针与数字时钟同步，每秒更新，显示浏览器所在时区的本地时间。</p>
+    </header>
+
+    <section class="paper-panel clock-panel" aria-label="当前时间">
+      <div class="clock-layout">
+        <div class="analog-clock-wrap">
+          <svg class="analog-clock" viewBox="0 0 220 220" role="img" aria-label="模拟时钟">
+            <circle class="analog-clock__face" cx="110" cy="110" r="98"></circle>
+            <circle class="analog-clock__inner" cx="110" cy="110" r="86"></circle>
+            <g aria-hidden="true">
+              <line class="analog-clock__tick analog-clock__tick--major" x1="110" y1="20" x2="110" y2="34" transform="rotate(0 110 110)"></line>
+              <line class="analog-clock__tick" x1="110" y1="20" x2="110" y2="29" transform="rotate(30 110 110)"></line>
+              <line class="analog-clock__tick" x1="110" y1="20" x2="110" y2="29" transform="rotate(60 110 110)"></line>
+              <line class="analog-clock__tick analog-clock__tick--major" x1="110" y1="20" x2="110" y2="34" transform="rotate(90 110 110)"></line>
+              <line class="analog-clock__tick" x1="110" y1="20" x2="110" y2="29" transform="rotate(120 110 110)"></line>
+              <line class="analog-clock__tick" x1="110" y1="20" x2="110" y2="29" transform="rotate(150 110 110)"></line>
+              <line class="analog-clock__tick analog-clock__tick--major" x1="110" y1="20" x2="110" y2="34" transform="rotate(180 110 110)"></line>
+              <line class="analog-clock__tick" x1="110" y1="20" x2="110" y2="29" transform="rotate(210 110 110)"></line>
+              <line class="analog-clock__tick" x1="110" y1="20" x2="110" y2="29" transform="rotate(240 110 110)"></line>
+              <line class="analog-clock__tick analog-clock__tick--major" x1="110" y1="20" x2="110" y2="34" transform="rotate(270 110 110)"></line>
+              <line class="analog-clock__tick" x1="110" y1="20" x2="110" y2="29" transform="rotate(300 110 110)"></line>
+              <line class="analog-clock__tick" x1="110" y1="20" x2="110" y2="29" transform="rotate(330 110 110)"></line>
+            </g>
+            <line class="analog-clock__hand analog-clock__hand--hour" id="hourHand" x1="110" y1="116" x2="110" y2="59"></line>
+            <line class="analog-clock__hand analog-clock__hand--minute" id="minuteHand" x1="110" y1="118" x2="110" y2="38"></line>
+            <line class="analog-clock__hand analog-clock__hand--second" id="secondHand" x1="110" y1="124" x2="110" y2="31"></line>
+            <circle class="analog-clock__pin" cx="110" cy="110" r="5"></circle>
+          </svg>
+        </div>
+
+        <div class="clock-readout">
+          <div class="clock-readout__date">
+            <span id="clockDate" data-clock-date>今天</span>
+            <span class="clock-readout__weekday" id="clockWeekday" data-clock-weekday>星期—</span>
+          </div>
+          <div class="clock-time" aria-label="当前时间">
+            <span id="clockHoursMinutes">--:--</span><span class="seconds" id="clockSeconds">:--</span>
+          </div>
+          <p class="clock-caption">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-sun"></use></svg>
+            <span data-clock-greeting>你好</span> · 本地时间，每秒刷新
+          </p>
+
+          <dl class="clock-facts">
+            <div class="clock-fact">
+              <dt>时区</dt>
+              <dd id="clockTimezone">本地</dd>
+            </div>
+            <div class="clock-fact">
+              <dt>今年的第</dt>
+              <dd id="clockDayOfYear">-- 天</dd>
+            </div>
+            <div class="clock-fact">
+              <dt>手账第</dt>
+              <dd id="clockWeekOfYear">-- 周</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="clock-panel__foot">
+        <span>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-clock"></use></svg>
+          时间来自你的设备，浏览器标签页休眠后会在恢复时自动校准。
+        </span>
+        <span>
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-pen"></use></svg>
+          第 <span id="clockPageNumber">--</span> 页
+        </span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer shell">
+    <div class="site-footer__brand">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-book"></use></svg>
+      一页工作台 <span class="text-faint">· STUDY LEDGER</span>
+    </div>
+    <div class="site-footer__note">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-clock"></use></svg>
+      <span>本地实时时钟 · <span data-current-year>2026</span></span>
+    </div>
+  </footer>
+</body>
+</html>

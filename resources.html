@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>学习网站导航 · 一页工作台</title>
+  <meta name="description" content="可自定义的本地学习网站导航，主入口为 OI Wiki，默认收录复杂度速查、Hello 算法、CS 自学指南等入口。">
+  <meta name="theme-color" content="#f5f0e4">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/common.js"></script>
+  <script defer src="js/resources.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <div class="curtain curtain--compact" aria-hidden="true">
+    <div class="curtain-inner">
+      <div class="curtain-brand">
+        <img class="curtain-art" src="assets/curtain-doodle.svg" alt="" width="190" height="56">
+        <span class="curtain-wordmark">
+          <strong>一页工作台</strong>
+          <small>STUDY LEDGER · NO. 07</small>
+        </span>
+      </div>
+      <div class="curtain-stitch"><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <header class="page-meta shell" aria-label="页眉信息栏">
+    <a class="back-link" href="index.html">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-arrow-left"></use></svg>
+      返回主页
+    </a>
+    <span class="meta-divider" aria-hidden="true"></span>
+    <span class="meta-page-title">学习网站导航</span>
+    <span class="meta-spacer"></span>
+    <span class="meta-clock-inline">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-clock"></use></svg>
+      <time data-clock-time>--:--:--</time>
+    </span>
+    <span class="meta-mini-date" data-clock-date>今天</span>
+  </header>
+
+  <main class="shell page-main" id="main">
+    <header class="page-heading">
+      <p class="eyebrow">STUDY LINKS · PERSONAL NAVIGATION</p>
+      <h1>学习网站导航</h1>
+      <svg class="sketch-underline" viewBox="0 0 310 10" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2 6.7C53 3 95 8.4 144 5.2c48-3.1 91 2.6 164-1.1"></path>
+        <path d="M16 8.3c60-2.4 103 1.3 158-.7 36-1.3 70-1.1 112-.3" opacity=".45"></path>
+      </svg>
+      <p>把自己的学习网站收进一页可编辑的书架。主入口指向 OI Wiki，复杂度速查保留为默认条目；之后可以添加、修改、删除，也可以随时恢复默认。</p>
+      <span class="heading-note">
+        <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-tag"></use></svg>
+        自定义条目保存在当前浏览器 localStorage · studyResources
+      </span>
+    </header>
+
+    <section class="paper-panel study-nav-panel" aria-labelledby="studyNavTitle">
+      <div class="study-nav-head">
+        <div>
+          <p class="eyebrow">MY STUDY SHELF</p>
+          <h2 id="studyNavTitle">我的学习书架</h2>
+          <p>像整理活页夹一样管理入口。外链会在新标签页打开，删除内置条目后可用“恢复默认”找回。</p>
+        </div>
+        <span class="resources-intro__mark" aria-hidden="true">
+          <svg class="icon"><use href="assets/icons.svg#icon-globe"></use></svg>
+        </span>
+      </div>
+
+      <div class="study-nav-tools">
+        <div class="study-search">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg>
+          <label class="visually-hidden" for="studySearch">搜索学习网站</label>
+          <input class="input" id="studySearch" type="search" placeholder="搜索标题、描述或分类…" autocomplete="off">
+        </div>
+        <div class="study-nav-actions">
+          <span class="study-resource-count" id="studyCount" aria-live="polite">0 个站点</span>
+          <button class="btn btn--primary btn--small" id="addStudyResourceBtn" type="button">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
+            添加网站
+          </button>
+          <button class="btn btn--small" id="restoreStudyResourcesBtn" type="button">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-refresh"></use></svg>
+            恢复默认
+          </button>
+        </div>
+      </div>
+
+      <div class="study-resource-list" id="studyResourceList" aria-live="polite"></div>
+
+      <p class="study-nav-foot">
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-shield"></use></svg>
+        导航数据只写在本机 <code>localStorage</code> 的 <code>studyResources</code> 键中，不会上传服务器。
+      </p>
+
+      <noscript>
+        <div class="notice notice--warn">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-alert"></use></svg>
+          <span>启用 JavaScript 后才能管理学习网站。你也可以直接访问 <a href="https://oi-wiki.org/" target="_blank" rel="noopener noreferrer">OI Wiki 主站</a>，或查看 <a href="https://oi-wiki.org/basic/complexity/" target="_blank" rel="noopener noreferrer">复杂度速查页</a>。</span>
+        </div>
+      </noscript>
+    </section>
+
+    <details class="paper-panel resources-reference" id="complexityReference">
+      <summary>
+        <span class="resources-reference__title">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-sigma"></use></svg>
+          <span>
+            <strong>复杂度速查附页</strong>
+            <small>Θ、O、Ω、o 与常见增长速度</small>
+          </span>
+        </span>
+        <span class="resources-reference__hint">
+          展开附页
+          <svg class="icon icon--tiny chevron" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-down"></use></svg>
+        </span>
+      </summary>
+
+      <div class="resources-reference__body">
+        <div class="resources-panel">
+          <div class="resources-intro">
+            <div>
+              <p class="eyebrow">ASIDE PAGE · QUICK REFERENCE</p>
+              <h2>渐进记号</h2>
+              <p>设 f(n) 与 g(n) 是定义在正整数上的函数。渐进记号描述的是增长趋势，而不是某个具体输入下的运行时间。</p>
+            </div>
+            <span class="resources-intro__mark" aria-hidden="true">
+              <svg class="icon"><use href="assets/icons.svg#icon-sigma"></use></svg>
+            </span>
+          </div>
+
+          <div class="definition-list" aria-label="渐进记号定义">
+            <div class="definition-item">
+              <div class="definition-item__symbol">Θ</div>
+              <div class="definition-item__name">渐进紧确界</div>
+              <p class="definition-item__desc">存在正常数 c₁、c₂、n₀，使 c₁g(n) ≤ f(n) ≤ c₂g(n)。增长阶相同。</p>
+            </div>
+            <div class="definition-item">
+              <div class="definition-item__symbol">O</div>
+              <div class="definition-item__name">渐进上界</div>
+              <p class="definition-item__desc">存在 c、n₀，使 0 ≤ f(n) ≤ c·g(n)。只保证“不会比它更快地增长”。</p>
+            </div>
+            <div class="definition-item">
+              <div class="definition-item__symbol">Ω</div>
+              <div class="definition-item__name">渐进下界</div>
+              <p class="definition-item__desc">存在 c、n₀，使 0 ≤ c·g(n) ≤ f(n)。说明增长至少达到这个量级。</p>
+            </div>
+            <div class="definition-item">
+              <div class="definition-item__symbol">o</div>
+              <div class="definition-item__name">非紧确上界</div>
+              <p class="definition-item__desc">f(n)/g(n) → 0。f 的增长严格慢于 g，例如 n = o(n²)。</p>
+            </div>
+            <div class="definition-item">
+              <div class="definition-item__symbol">ω</div>
+              <div class="definition-item__name">非紧确下界</div>
+              <p class="definition-item__desc">f(n)/g(n) → ∞。f 的增长严格快于 g，例如 n² = ω(n)。</p>
+            </div>
+          </div>
+
+          <p class="definition-note">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-alert"></use></svg>
+            <span>常被写在题解里的 O 往往被当作“大约的复杂度”。严格地说，O 只是上界；要表达上下界相同，应使用 Θ。</span>
+          </p>
+
+          <div class="complexity-head">
+            <h3>
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-layers"></use></svg>
+              常见复杂度排序
+            </h3>
+            <p>从低到高 · 条形长度仅表示相对增长速度</p>
+          </div>
+
+          <table class="complexity-table">
+            <caption class="visually-hidden">常见时间复杂度从低到高排序</caption>
+            <thead>
+              <tr>
+                <th scope="col">记号</th>
+                <th scope="col">增长速度</th>
+                <th scope="col">典型场景</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>O(1)</td>
+                <td>
+                  <div class="complexity-bar">
+                    <span class="complexity-bar__track"><span class="complexity-bar__fill" style="--bar-width: 9%"></span></span>
+                    <span class="complexity-bar__label">常数</span>
+                  </div>
+                </td>
+                <td>哈希表均摊查找、数组按下标访问</td>
+              </tr>
+              <tr>
+                <td>O(log n)</td>
+                <td>
+                  <div class="complexity-bar">
+                    <span class="complexity-bar__track"><span class="complexity-bar__fill" style="--bar-width: 21%"></span></span>
+                    <span class="complexity-bar__label">对数</span>
+                  </div>
+                </td>
+                <td>二分查找、平衡树查找、快速幂</td>
+              </tr>
+              <tr>
+                <td>O(n)</td>
+                <td>
+                  <div class="complexity-bar">
+                    <span class="complexity-bar__track"><span class="complexity-bar__fill" style="--bar-width: 36%"></span></span>
+                    <span class="complexity-bar__label">线性</span>
+                  </div>
+                </td>
+                <td>遍历数组、单层循环、线性筛</td>
+              </tr>
+              <tr>
+                <td>O(n log n)</td>
+                <td>
+                  <div class="complexity-bar">
+                    <span class="complexity-bar__track"><span class="complexity-bar__fill" style="--bar-width: 52%"></span></span>
+                    <span class="complexity-bar__label">线性对数</span>
+                  </div>
+                </td>
+                <td>归并排序、堆排序、按权值排序后的并查集</td>
+              </tr>
+              <tr>
+                <td>O(n²)</td>
+                <td>
+                  <div class="complexity-bar">
+                    <span class="complexity-bar__track"><span class="complexity-bar__fill" style="--bar-width: 68%"></span></span>
+                    <span class="complexity-bar__label">平方</span>
+                  </div>
+                </td>
+                <td>双重循环、Floyd 最短路、邻接矩阵遍历</td>
+              </tr>
+              <tr>
+                <td>O(2ⁿ)</td>
+                <td>
+                  <div class="complexity-bar">
+                    <span class="complexity-bar__track"><span class="complexity-bar__fill" style="--bar-width: 86%"></span></span>
+                    <span class="complexity-bar__label">指数</span>
+                  </div>
+                </td>
+                <td>枚举子集、未剪枝的搜索、简单递归斐波那契</td>
+              </tr>
+              <tr>
+                <td>O(n!)</td>
+                <td>
+                  <div class="complexity-bar">
+                    <span class="complexity-bar__track"><span class="complexity-bar__fill" style="--bar-width: 100%"></span></span>
+                    <span class="complexity-bar__label">阶乘</span>
+                  </div>
+                </td>
+                <td>全排列枚举、旅行商问题的暴力搜索</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="complexity-order">
+            <strong>增长速度</strong>
+            <span>O(1)</span><span>&lt;</span><span>O(log n)</span><span>&lt;</span><span>O(n)</span><span>&lt;</span><span>O(n log n)</span><span>&lt;</span><span>O(n²)</span><span>&lt;</span><span>O(2ⁿ)</span><span>&lt;</span><span>O(n!)</span>
+          </div>
+
+          <div class="oi-callout">
+            <div class="oi-callout__text">
+              <span class="oi-callout__icon">
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-book"></use></svg>
+              </span>
+              <div>
+                <h3>前往 OI Wiki 查看完整讲解</h3>
+                <p>包含定义、运算规则、主定理与常见误区。外链会离开当前工作台，不在页面内嵌入 iframe。</p>
+              </div>
+            </div>
+            <div class="oi-callout__actions">
+              <a class="btn btn--primary btn--small" href="https://oi-wiki.org/basic/complexity/" target="_blank" rel="noopener noreferrer">
+                打开 OI Wiki 复杂度页
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <footer class="site-footer shell">
+    <div class="site-footer__brand">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-book"></use></svg>
+      一页工作台 <span class="text-faint">· STUDY LEDGER</span>
+    </div>
+    <div class="site-footer__note">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-globe"></use></svg>
+      <span>学习网站书架 · <span data-current-year>2026</span></span>
+    </div>
+  </footer>
+
+  <dialog class="app-dialog resource-dialog" id="studyResourceDialog" aria-labelledby="studyResourceDialogTitle" aria-describedby="studyResourceDialogIntro">
+    <form class="dialog__form" id="studyResourceForm" novalidate>
+      <p class="eyebrow dialog__eyebrow">STUDY LINK</p>
+      <h2 class="dialog__title" id="studyResourceDialogTitle">添加学习网站</h2>
+      <p class="dialog__message" id="studyResourceDialogIntro">给书架添一个入口，保存后可在本页搜索和编辑。</p>
+
+      <input type="hidden" id="studyResourceId">
+
+      <div class="form-grid">
+        <div class="field field--full">
+          <label for="studyResourceTitle">标题 <span class="field-label__hint">必填</span></label>
+          <input class="input" id="studyResourceTitle" type="text" maxlength="60" placeholder="例如：OI Wiki 复杂度" required>
+        </div>
+        <div class="field field--full">
+          <label for="studyResourceUrl">网址 <span class="field-label__hint">必填，http(s)</span></label>
+          <input class="input" id="studyResourceUrl" type="text" maxlength="500" inputmode="url" placeholder="https://example.com" required>
+        </div>
+        <div class="field field--full">
+          <label for="studyResourceDescription">一句话描述</label>
+          <textarea class="textarea" id="studyResourceDescription" maxlength="160" rows="2" placeholder="这个网站适合用来做什么？"></textarea>
+        </div>
+        <div class="field field--full">
+          <label for="studyResourceCategory">分类 / 标签 <span class="field-label__hint">可选</span></label>
+          <input class="input" id="studyResourceCategory" type="text" maxlength="24" placeholder="例如：算法、Web、数学">
+        </div>
+      </div>
+
+      <p class="form-error" id="studyResourceError" hidden>
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-alert"></use></svg>
+        <span></span>
+      </p>
+
+      <div class="dialog__actions">
+        <button class="btn btn--ghost" id="studyResourceCancelBtn" type="button">取消</button>
+        <button class="btn btn--primary" id="studyResourceSaveBtn" type="submit">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-save"></use></svg>
+          保存网站
+        </button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

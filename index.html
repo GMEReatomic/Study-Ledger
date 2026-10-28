@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>一页工作台 · 今日手账</title>
+  <meta name="description" content="一页工作台：加密密码保险箱、Aster 个人知识库、可自定义学习网站导航、天气与时间。">
+  <meta name="theme-color" content="#f5f0e4">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/common.js"></script>
+  <script defer src="js/home.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+
+  <!-- 装饰性书眉带，不是网页 Banner -->
+  <div class="curtain" aria-hidden="true">
+    <div class="curtain-inner">
+      <div class="curtain-brand">
+        <img class="curtain-art" src="assets/curtain-doodle.svg" alt="" width="190" height="56">
+        <span class="curtain-wordmark">
+          <strong>一页工作台</strong>
+          <small>STUDY LEDGER · NO. 07</small>
+        </span>
+      </div>
+      <div class="curtain-stitch"><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <!-- 页眉信息栏：日期便签、天气、外部工具在同一区域 -->
+  <header class="meta-bar shell" aria-label="页眉信息栏">
+    <a class="meta-clock-block" href="datetime.html" aria-label="查看日期与时间详情" title="打开时间页">
+      <span class="meta-date" data-clock-date>今天</span>
+      <time class="meta-time" data-clock-time>--:--:--</time>
+    </a>
+
+    <a class="meta-weather" href="weather.html" data-header-weather aria-label="查看天气详情">
+      <span class="meta-weather__icon">
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-cloud"></use></svg>
+      </span>
+      <span class="meta-weather__detail">天气读取中…</span>
+      <span class="meta-weather__hint">
+        <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-arrow-up-right"></use></svg>
+      </span>
+    </a>
+
+    <div class="meta-tools">
+      <details class="tool-index" data-menu>
+        <summary>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="assets/icons.svg#icon-external"></use></svg>
+          外部工具
+          <svg class="icon icon--tiny chevron" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-down"></use></svg>
+        </summary>
+        <nav class="tool-index__panel" aria-label="外部工具快捷入口">
+          <p class="tool-index__label">EXTERNAL / 外部工具</p>
+          <a class="tool-index__item" href="https://filehelper.weixin.qq.com/" target="_blank" rel="noopener noreferrer">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-message"></use></svg>
+            <span><strong>微信文件助手</strong><small>发送临时文件与文字</small></span>
+          </a>
+          <a class="tool-index__item" href="https://tools.liumingye.cn/music/" target="_blank" rel="noopener noreferrer">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-music"></use></svg>
+            <span><strong>歌曲下载</strong><small>第三方音乐检索 · 可用性不保证</small></span>
+          </a>
+          <a class="tool-index__item" href="https://www.bentopdf.com/" target="_blank" rel="noopener noreferrer">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-file"></use></svg>
+            <span><strong>文档转换</strong><small>BentoPDF · 外部处理</small></span>
+          </a>
+          <a class="tool-index__item" href="https://massgrave.dev/" target="_blank" rel="noopener noreferrer">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-power"></use></svg>
+            <span><strong>一键激活说明</strong><small>仅外部说明，不执行任何逻辑</small></span>
+          </a>
+
+          <div class="tool-index__mail">
+            <p class="tool-index__mail-label">
+              <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-mail"></use></svg>
+              邮箱入口
+            </p>
+            <div class="tool-index__mail-links">
+              <a href="https://mail.google.com/" target="_blank" rel="noopener noreferrer">Gmail</a>
+              <a href="https://mail.qq.com/" target="_blank" rel="noopener noreferrer">QQ 邮箱</a>
+              <a href="https://mail.163.com/" target="_blank" rel="noopener noreferrer">163 邮箱</a>
+              <a href="https://outlook.live.com/mail/0/" target="_blank" rel="noopener noreferrer">Outlook</a>
+            </div>
+          </div>
+
+          <a class="tool-index__all" href="external.html" aria-label="查看全部外部工具">
+            查看全部外部工具
+            <span aria-hidden="true">→</span>
+          </a>
+          <p class="tool-index__foot">外部跳转 · 可用性由第三方站点决定</p>
+        </nav>
+      </details>
+      <div class="theme-dock-mount" id="themeDockMount"></div>
+    </div>
+  </header>
+
+  <main class="shell home-main" id="main">
+    <section class="home-intro" aria-labelledby="homeTitle">
+      <div class="home-intro__copy">
+        <p class="eyebrow">
+          <span data-clock-greeting>你好</span>
+          <span>· 今日手账</span>
+          <span>· 第 <span id="homeWeek">--</span> 周</span>
+        </p>
+        <h1 id="homeTitle">先把今天写成一页，再谈远方</h1>
+        <svg class="sketch-underline" viewBox="0 0 310 10" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M2 6.7C53 3 95 8.4 144 5.2c48-3.1 91 2.6 164-1.1"></path>
+          <path d="M16 8.3c60-2.4 103 1.3 158-.7 36-1.3 70-1.1 112-.3" opacity=".45"></path>
+        </svg>
+        <p class="home-intro__lede">把要紧的事写下来，一件一件划掉。纸页会记得你的进度。</p>
+        <p class="home-quote" id="homeQuote" aria-live="polite">
+          <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-plant"></use></svg>
+          <span id="homeQuoteText">今天也慢慢来，把重要的一行写下。</span>
+        </p>
+      </div>
+      <div class="home-date-stamp" aria-hidden="true">
+        <span class="home-date-stamp__month" id="homeMonth">OCT</span>
+        <strong id="homeDay">21</strong>
+        <small id="homeStampMeta">2026 · WED</small>
+      </div>
+    </section>
+
+    <div class="home-grid">
+      <section class="paper-panel paper-panel--taped task-panel" aria-labelledby="tasksTitle">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">DAILY CHECKLIST</p>
+            <h2 id="tasksTitle">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-check-circle"></use></svg>
+              今日清单
+            </h2>
+            <p>写完就放下，完成再划掉。</p>
+          </div>
+          <div class="panel-head__aside">
+            <span class="task-count" aria-label="任务完成情况"><strong id="taskDone">0</strong>/<span id="taskTotal">0</span></span>
+          </div>
+        </div>
+
+        <form class="task-form" id="taskForm" autocomplete="off">
+          <label class="visually-hidden" for="taskInput">添加今日任务</label>
+          <input class="input task-form__input" id="taskInput" type="text" maxlength="120" placeholder="写下一件今天要做的事…" required>
+          <button class="btn btn--primary" type="submit">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
+            <span>加入</span>
+          </button>
+        </form>
+
+        <ul class="task-list" id="taskList" aria-live="polite"></ul>
+
+        <div class="task-panel__foot">
+          <span id="taskFootnote">今天的纸面还很空，先写第一行。</span>
+          <button class="btn btn--link" id="clearCompleted" type="button" hidden>清空已完成</button>
+        </div>
+      </section>
+
+      <aside class="paper-panel paper-panel--taped index-panel" aria-labelledby="toolsTitle">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">INNER PAGES</p>
+            <h2 id="toolsTitle">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-layers"></use></svg>
+              站内工具
+            </h2>
+            <p>只收本子内部的四个页签；天气和时间从页眉进入。</p>
+          </div>
+          <div class="panel-head__aside">
+            <span class="tag tag--brown">4 项</span>
+          </div>
+        </div>
+
+        <nav class="tool-ledger" aria-label="站内工具清单">
+          <a class="tool-row" href="password.html">
+            <span class="tool-box" aria-hidden="true"></span>
+            <span class="tool-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-lock"></use></svg></span>
+            <span class="tool-text"><strong>密码保险箱</strong><small>PBKDF2 · AES-GCM 本地加密</small></span>
+            <span class="tool-arrow" aria-hidden="true"><svg class="icon"><use href="assets/icons.svg#icon-chevron-right"></use></svg></span>
+          </a>
+          <a class="tool-row" href="notes.html">
+            <span class="tool-box" aria-hidden="true"></span>
+            <span class="tool-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-note"></use></svg></span>
+            <span class="tool-text"><strong>Aster 知识库</strong><small>个人知识库 · Markdown / LaTeX / 自定义导图</small></span>
+            <span class="tool-arrow" aria-hidden="true"><svg class="icon"><use href="assets/icons.svg#icon-chevron-right"></use></svg></span>
+          </a>
+          <a class="tool-row" href="resources.html">
+            <span class="tool-box" aria-hidden="true"></span>
+            <span class="tool-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-globe"></use></svg></span>
+            <span class="tool-text"><strong>学习网站导航</strong><small>OI Wiki 主入口 · 可自定义书架</small></span>
+            <span class="tool-arrow" aria-hidden="true"><svg class="icon"><use href="assets/icons.svg#icon-chevron-right"></use></svg></span>
+          </a>
+          <a class="tool-row" href="random.html">
+            <span class="tool-box" aria-hidden="true"></span>
+            <span class="tool-icon"><svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-shuffle"></use></svg></span>
+            <span class="tool-text"><strong>随机站点</strong><small>从学习签筒里抽一个目的地</small></span>
+            <span class="tool-arrow" aria-hidden="true"><svg class="icon"><use href="assets/icons.svg#icon-chevron-right"></use></svg></span>
+          </a>
+        </nav>
+
+        <p class="index-panel__foot">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-shield"></use></svg>
+          <span>站内 4 项 · 时间与天气在页眉，外部工具在右上角。</span>
+        </p>
+      </aside>
+    </div>
+
+    <section class="home-footnote" aria-label="工作台状态">
+      <p class="home-footnote__quote">
+        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plant"></use></svg>
+        「慢慢来，也是在前进。」
+      </p>
+      <p class="home-footnote__status"><span class="status-dot" aria-hidden="true"></span> 本机模式 · 今日任务自动保存</p>
+    </section>
+  </main>
+
+  <footer class="site-footer shell">
+    <div class="site-footer__brand">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-book"></use></svg>
+      一页工作台 <span class="text-faint">· STUDY LEDGER</span>
+    </div>
+    <div class="site-footer__note">
+      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-shield"></use></svg>
+      <span>本地优先 · 轻量静态 · <span data-current-year>2026</span></span>
+    </div>
+  </footer>
+</body>
+</html>
