@@ -33,9 +33,9 @@
   </div>
 
   <header class="page-meta shell notes-page-meta" aria-label="页眉信息栏">
-    <a class="back-link" href="index.html">
+    <a class="back-link back-link--icon" href="index.html" aria-label="返回主页" title="返回主页" data-tooltip="返回主页">
       <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-arrow-left"></use></svg>
-      返回主页
+      <span class="visually-hidden">返回主页</span>
     </a>
     <span class="meta-divider" aria-hidden="true"></span>
     <span class="meta-page-title">Aster 知识库</span>
@@ -64,9 +64,8 @@
 
     <section class="paper-panel notes-app" id="notesApp" data-pane="editor" aria-label="Aster 知识库工作台">
       <div class="notes-topbar">
-        <button class="btn notes-library-toggle" id="libraryToggle" type="button" aria-controls="notesSidebar" aria-expanded="false">
+        <button class="icon-btn notes-library-toggle" id="libraryToggle" type="button" aria-controls="notesSidebar" aria-expanded="false" aria-label="知识库侧栏" title="知识库侧栏" data-tooltip="知识库侧栏">
           <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg>
-          知识库
         </button>
 
         <label class="visually-hidden" for="noteTitle">当前笔记标题</label>
@@ -78,21 +77,17 @@
             已保存
           </span>
 
-          <button class="btn btn--small notes-action-btn" id="importNoteBtn" type="button" title="导入本地 Markdown 或文本文件">
+          <button class="icon-btn notes-action-btn" id="importNoteBtn" type="button" title="导入本地 Markdown 或文本文件" data-tooltip="导入文件" aria-label="导入文件">
             <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-upload"></use></svg>
-            导入
           </button>
 
-          <button class="btn btn--small notes-delete-btn" id="deleteNoteBtn" type="button" title="删除当前笔记">
+          <button class="icon-btn notes-delete-btn" id="deleteNoteBtn" type="button" title="删除当前笔记" data-tooltip="删除当前笔记" aria-label="删除当前笔记">
             <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-trash"></use></svg>
-            删除
           </button>
 
           <details class="mini-menu" data-menu>
-            <summary>
+            <summary class="icon-btn" title="复制选中文字并打开 AI" data-tooltip="问 AI" aria-label="问 AI">
               <svg class="icon icon--sm" aria-hidden="true"><use href="assets/icons.svg#icon-spark"></use></svg>
-              问 AI
-              <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-down"></use></svg>
             </summary>
             <div class="menu-panel">
               <p class="menu-panel__label">复制题目并打开</p>
@@ -116,10 +111,8 @@
           </details>
 
           <details class="mini-menu" data-menu>
-            <summary>
+            <summary class="icon-btn" title="导出当前笔记" data-tooltip="导出" aria-label="导出当前笔记">
               <svg class="icon icon--sm" aria-hidden="true"><use href="assets/icons.svg#icon-download"></use></svg>
-              导出
-              <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-down"></use></svg>
             </summary>
             <div class="menu-panel">
               <p class="menu-panel__label">导出当前笔记</p>
@@ -141,8 +134,12 @@
       <div class="inline-confirm" id="inlineDeleteBar" role="alertdialog" aria-labelledby="inlineDeleteText" hidden>
         <span class="inline-confirm__text" id="inlineDeleteText">确定删除这篇笔记？删除后无法恢复。</span>
         <div class="inline-confirm__actions">
-          <button class="btn btn--small btn--danger" id="inlineDeleteConfirm" type="button">删除</button>
-          <button class="btn btn--small" id="inlineDeleteCancel" type="button">取消</button>
+          <button class="icon-btn icon-btn--danger" id="inlineDeleteConfirm" type="button" title="确认删除" data-tooltip="确认删除" aria-label="确认删除">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-trash"></use></svg>
+          </button>
+          <button class="icon-btn" id="inlineDeleteCancel" type="button" title="取消删除" data-tooltip="取消删除" aria-label="取消删除">
+            <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-x"></use></svg>
+          </button>
         </div>
       </div>
 
@@ -152,10 +149,24 @@
         <aside class="notes-sidebar" id="notesSidebar" aria-label="Aster 知识库侧栏">
           <div class="notes-sidebar__top">
             <span class="section-label">ASTER / 知识库</span>
-            <button class="btn btn--primary btn--small notes-new-btn" id="newNoteBtn" type="button">
-              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
-              新建
-            </button>
+            <div class="notes-create-actions">
+              <button class="icon-btn icon-btn--accent notes-new-btn" id="newNoteBtn" type="button" title="新建空白笔记" data-tooltip="新建笔记" aria-label="新建空白笔记">
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
+              </button>
+              <details class="template-menu" id="templateMenu" data-menu>
+                <summary class="icon-btn" title="从模板新建" data-tooltip="从模板新建" aria-label="从模板新建">
+                  <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-template"></use></svg>
+                </summary>
+                <div class="template-menu__panel" id="templateMenuPanel" role="menu" aria-label="笔记模板">
+                  <p class="template-menu__eyebrow">TEMPLATES / 从模板新建</p>
+                  <div class="template-menu__list" id="templateList"></div>
+                  <button class="template-menu__manage" id="manageTemplatesBtn" type="button" title="管理自定义模板" data-tooltip="管理自定义模板" aria-label="管理自定义模板">
+                    <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
+                    <span>添加自定义模板</span>
+                  </button>
+                </div>
+              </details>
+            </div>
           </div>
 
           <div class="notes-search">
@@ -165,14 +176,18 @@
           </div>
 
           <div class="notes-search-scope" id="searchScopeToggle" role="group" aria-label="搜索范围">
-            <button type="button" data-search-scope="folder" class="is-active" aria-pressed="true">当前文件夹</button>
-            <button type="button" data-search-scope="all" aria-pressed="false">全部</button>
+            <button type="button" data-search-scope="folder" class="is-active" aria-pressed="true" aria-label="搜索当前文件夹" title="搜索当前文件夹" data-tooltip="当前文件夹">
+              <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-folder"></use></svg>
+            </button>
+            <button type="button" data-search-scope="all" aria-pressed="false" aria-label="搜索全部笔记" title="搜索全部笔记" data-tooltip="全部笔记">
+              <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-layers"></use></svg>
+            </button>
           </div>
 
           <section class="folder-tree" aria-labelledby="folderTreeTitle">
             <div class="folder-tree__head">
               <span class="section-label" id="folderTreeTitle">FOLDERS / 文件夹</span>
-              <button class="folder-add-btn" id="newFolderBtn" type="button" aria-label="新建文件夹" title="新建文件夹">
+              <button class="folder-add-btn" id="newFolderBtn" type="button" aria-label="新建文件夹" title="新建文件夹" data-tooltip="新建文件夹">
                 <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-folder-plus"></use></svg>
               </button>
             </div>
@@ -180,8 +195,12 @@
             <form class="folder-new" id="newFolderForm" hidden>
               <label class="visually-hidden" for="newFolderInput">新文件夹名称</label>
               <input class="input" id="newFolderInput" type="text" maxlength="80" placeholder="文件夹名称" autocomplete="off">
-              <button class="btn btn--primary btn--small" type="submit">建</button>
-              <button class="btn btn--small" id="newFolderCancel" type="button">取消</button>
+              <button class="icon-btn icon-btn--accent" type="submit" title="创建文件夹" data-tooltip="创建文件夹" aria-label="创建文件夹">
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-check"></use></svg>
+              </button>
+              <button class="icon-btn" id="newFolderCancel" type="button" title="取消新建" data-tooltip="取消" aria-label="取消新建文件夹">
+                <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-x"></use></svg>
+              </button>
             </form>
           </section>
 
@@ -194,11 +213,15 @@
 
           <div class="notes-sidebar__foot">
             <span id="noteCount" aria-live="polite"></span>
-            <button class="btn btn--link" id="sampleNoteBtn" type="button">载入示例</button>
+            <button class="icon-btn" id="sampleNoteBtn" type="button" title="载入示例笔记" data-tooltip="载入示例" data-tooltip-pos="top" aria-label="载入示例笔记">
+              <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-book"></use></svg>
+            </button>
           </div>
         </aside>
 
         <section class="notes-editor" aria-label="当前笔记编辑区">
+          <div class="note-tabs" id="noteTabBar" role="tablist" aria-label="打开的笔记"></div>
+
           <div class="notes-tag-row">
             <label class="notes-tag-row__label" for="noteTags">
               <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-tag"></use></svg>
@@ -215,11 +238,14 @@
           </div>
 
           <div class="editor-tabs" role="tablist" aria-label="编辑、预览与思维导图切换">
-            <button class="editor-tab is-active" id="editorTab" type="button" role="tab" aria-selected="true" aria-controls="editorPane" data-pane-target="editor">编辑 Markdown</button>
-            <button class="editor-tab" id="previewTab" type="button" role="tab" aria-selected="false" aria-controls="previewPane" data-pane-target="preview">预览公式</button>
-            <button class="editor-tab" id="mindmapTab" type="button" role="tab" aria-selected="false" aria-controls="mindmapView" data-pane-target="mindmap">
-              <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-layers"></use></svg>
-              思维导图
+            <button class="editor-tab icon-btn is-active" id="editorTab" type="button" role="tab" aria-selected="true" aria-controls="editorPane" data-pane-target="editor" title="编辑 Markdown" data-tooltip="编辑 Markdown" aria-label="编辑 Markdown">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-pen"></use></svg>
+            </button>
+            <button class="editor-tab icon-btn" id="previewTab" type="button" role="tab" aria-selected="false" aria-controls="previewPane" data-pane-target="preview" title="预览公式" data-tooltip="预览公式" aria-label="预览公式">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye"></use></svg>
+            </button>
+            <button class="editor-tab icon-btn" id="mindmapTab" type="button" role="tab" aria-selected="false" aria-controls="mindmapView" data-pane-target="mindmap" title="思维导图" data-tooltip="思维导图" aria-label="思维导图">
+              <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-layers"></use></svg>
             </button>
           </div>
 
@@ -227,43 +253,73 @@
             <div class="editor-pane" id="editorPane" role="tabpanel" aria-labelledby="editorTab">
               <div class="editor-toolbar" aria-label="公式与格式工具条">
                 <div class="toolbar-group">
-                  <span class="toolbar-label">公式</span>
-                  <button class="insert-btn" type="button" data-insert="fraction" title="插入分数模板">分数</button>
-                  <button class="insert-btn" type="button" data-insert="sqrt" title="插入根号模板">根号</button>
-                  <button class="insert-btn" type="button" data-insert="supsub" title="插入上下标模板">上下标</button>
-                  <button class="insert-btn" type="button" data-insert="integral" title="插入积分模板">积分</button>
-                  <button class="insert-btn" type="button" data-insert="sum" title="插入求和模板">求和</button>
+                  <button class="insert-btn icon-btn" type="button" data-insert="fraction" title="插入分数模板" data-tooltip="分数" aria-label="插入分数模板">
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-fraction"></use></svg>
+                  </button>
+                  <button class="insert-btn icon-btn" type="button" data-insert="sqrt" title="插入根号模板" data-tooltip="根号" aria-label="插入根号模板">
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-sqrt"></use></svg>
+                  </button>
+                  <button class="insert-btn icon-btn" type="button" data-insert="supsub" title="插入上下标模板" data-tooltip="上下标" aria-label="插入上下标模板">
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-superscript"></use></svg>
+                  </button>
+                  <button class="insert-btn icon-btn" type="button" data-insert="integral" title="插入积分模板" data-tooltip="积分" aria-label="插入积分模板">
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-integral"></use></svg>
+                  </button>
+                  <button class="insert-btn icon-btn" type="button" data-insert="sum" title="插入求和模板" data-tooltip="求和" aria-label="插入求和模板">
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-sigma"></use></svg>
+                  </button>
                   <details class="toolbar-more" data-menu>
-                    <summary class="insert-btn" title="更多公式命令">更多</summary>
+                    <summary class="insert-btn icon-btn" title="更多公式命令" data-tooltip="更多公式" aria-label="更多公式命令">
+                      <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-more"></use></svg>
+                    </summary>
                     <div class="toolbar-more__panel">
-                      <button class="insert-btn" type="button" data-insert="matrix">矩阵</button>
-                      <button class="insert-btn" type="button" data-insert="limit">极限</button>
-                      <button class="insert-btn" type="button" data-insert="aligned">对齐</button>
-                      <button class="insert-btn" type="button" data-insert="cases">分段</button>
-                      <button class="insert-btn" type="button" data-insert="greek">希腊</button>
+                      <button class="insert-btn icon-btn" type="button" data-insert="matrix" title="插入矩阵" data-tooltip="矩阵" aria-label="插入矩阵">
+                        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-matrix"></use></svg>
+                      </button>
+                      <button class="insert-btn icon-btn" type="button" data-insert="limit" title="插入极限" data-tooltip="极限" aria-label="插入极限">
+                        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-limit"></use></svg>
+                      </button>
+                      <button class="insert-btn icon-btn" type="button" data-insert="aligned" title="插入对齐环境" data-tooltip="对齐" aria-label="插入对齐环境">
+                        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-align"></use></svg>
+                      </button>
+                      <button class="insert-btn icon-btn" type="button" data-insert="cases" title="插入分段函数" data-tooltip="分段" aria-label="插入分段函数">
+                        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-cases"></use></svg>
+                      </button>
+                      <button class="insert-btn icon-btn" type="button" data-insert="greek" title="插入希腊字母" data-tooltip="希腊字母" aria-label="插入希腊字母">
+                        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-greek"></use></svg>
+                      </button>
                     </div>
                   </details>
                 </div>
-                <span class="toolbar-divider" aria-hidden="true"></span>
                 <div class="toolbar-group toolbar-group--format">
-                  <span class="toolbar-label">格式</span>
-                  <button class="insert-btn" type="button" data-format="display-math" title="把选中文字变成独立公式">独立</button>
-                  <button class="insert-btn" type="button" data-format="inline-math" title="把选中文字变成行内公式">行内</button>
-                  <button class="format-btn" type="button" data-format="bold" aria-label="加粗" title="加粗"><strong>B</strong></button>
-                  <button class="format-btn" type="button" data-format="italic" aria-label="斜体" title="斜体"><em>I</em></button>
-                  <button class="format-btn" type="button" data-format="strike" aria-label="删除线" title="删除线"><s>S</s></button>
-                  <button class="format-btn" type="button" data-format="underline" aria-label="下划线" title="下划线"><u>U</u></button>
+                  <button class="format-btn icon-btn" type="button" data-format="display-math" title="把选中文字变成独立公式" data-tooltip="独立公式" aria-label="独立公式">
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-math-block"></use></svg>
+                  </button>
+                  <button class="format-btn icon-btn" type="button" data-format="inline-math" title="把选中文字变成行内公式" data-tooltip="行内公式" aria-label="行内公式">
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-math-inline"></use></svg>
+                  </button>
+                  <button class="format-btn icon-btn" type="button" data-format="bold" title="加粗" data-tooltip="加粗" aria-label="加粗">
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-bold"></use></svg>
+                  </button>
+                  <button class="format-btn icon-btn" type="button" data-format="italic" title="斜体" data-tooltip="斜体" aria-label="斜体">
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-italic"></use></svg>
+                  </button>
+                  <button class="format-btn icon-btn" type="button" data-format="strike" title="删除线" data-tooltip="删除线" aria-label="删除线">
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-strike"></use></svg>
+                  </button>
+                  <button class="format-btn icon-btn" type="button" data-format="underline" title="下划线" data-tooltip="下划线" aria-label="下划线">
+                    <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-underline"></use></svg>
+                  </button>
                 </div>
-                <span class="toolbar-divider" aria-hidden="true"></span>
                 <div class="toolbar-group toolbar-group--colors">
-                  <span class="toolbar-label">颜色</span>
-                  <button class="color-btn color-btn--ink" type="button" data-color="ink" aria-label="墨蓝色文字" title="墨蓝"></button>
-                  <button class="color-btn color-btn--rust" type="button" data-color="rust" aria-label="棕红色文字" title="棕红"></button>
-                  <button class="color-btn color-btn--olive" type="button" data-color="olive" aria-label="橄榄绿文字" title="橄榄绿"></button>
-                  <button class="color-btn color-btn--mauve" type="button" data-color="mauve" aria-label="灰紫色文字" title="灰紫"></button>
+                  <button class="color-btn color-btn--ink" type="button" data-color="ink" aria-label="墨蓝色文字" title="墨蓝色文字" data-tooltip="墨蓝"></button>
+                  <button class="color-btn color-btn--rust" type="button" data-color="rust" aria-label="棕红色文字" title="棕红色文字" data-tooltip="棕红"></button>
+                  <button class="color-btn color-btn--olive" type="button" data-color="olive" aria-label="橄榄绿色文字" title="橄榄绿色文字" data-tooltip="橄榄绿"></button>
+                  <button class="color-btn color-btn--mauve" type="button" data-color="mauve" aria-label="灰紫色文字" title="灰紫色文字" data-tooltip="灰紫"></button>
                 </div>
-                <span class="toolbar-divider" aria-hidden="true"></span>
-                <button class="insert-btn insert-btn--wide" type="button" id="focusCheatBtn" title="打开 LaTeX 速查">速查</button>
+                <button class="insert-btn insert-btn--wide icon-btn" type="button" id="focusCheatBtn" title="打开 LaTeX 速查" data-tooltip="LaTeX 速查" aria-label="打开 LaTeX 速查">
+                  <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-sigma"></use></svg>
+                </button>
               </div>
               <label class="visually-hidden" for="markdownInput">Markdown 与 LaTeX 编辑器</label>
               <textarea class="markdown-input" id="markdownInput" spellcheck="false" placeholder="# 题目&#10;&#10;在这里写下题目、思路和推导。&#10;&#10;行内公式：$a^2+b^2=c^2$&#10;块级公式：&#10;$$\int_a^b f(x)\,dx$$" aria-label="Markdown 与 LaTeX 编辑器"></textarea>
@@ -271,15 +327,14 @@
 
             <div class="preview-pane" id="previewPane" role="tabpanel" aria-labelledby="previewTab">
               <div class="preview-head">
-                <span class="preview-head__label">
+                <span class="preview-head__label" aria-label="实时预览" title="实时预览">
                   <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-eye"></use></svg>
-                  实时预览
+                  <span class="visually-hidden">实时预览</span>
                 </span>
                 <div class="preview-head__actions">
                   <span class="render-badge" id="renderBadge">正在加载渲染器…</span>
-                  <button class="preview-fullscreen-btn" id="previewFullscreenBtn" type="button" aria-pressed="false" title="预览全屏（Esc 退出）">
+                  <button class="preview-fullscreen-btn icon-btn" id="previewFullscreenBtn" type="button" aria-pressed="false" title="预览全屏（Esc 退出）" data-tooltip="全屏预览" aria-label="全屏预览">
                     <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-maximize"></use></svg>
-                    <span>全屏</span>
                   </button>
                 </div>
               </div>
@@ -298,13 +353,11 @@
                 <p id="mindmapStatus" aria-live="polite">还在等一页笔记。</p>
               </div>
               <div class="mindmap-actions">
-                <button class="btn btn--small" id="mindmapExpandAllBtn" type="button">
+                <button class="icon-btn" id="mindmapExpandAllBtn" type="button" title="展开全部节点" data-tooltip="展开全部" aria-label="展开全部节点">
                   <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
-                  展开全部
                 </button>
-                <button class="btn btn--small" id="mindmapCollapseAllBtn" type="button">
+                <button class="icon-btn" id="mindmapCollapseAllBtn" type="button" title="折叠全部节点" data-tooltip="全部折叠" aria-label="折叠全部节点">
                   <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-minus"></use></svg>
-                  全部折叠
                 </button>
               </div>
             </div>
@@ -322,7 +375,7 @@
                   <p class="section-label">NODE NOTES / 节点内容</p>
                   <div class="mindmap-detail__head-actions">
                     <span class="tag" id="mindmapDetailKind">等待选择</span>
-                    <button class="mindmap-detail__close" id="mindmapDetailCloseBtn" type="button" aria-label="关闭节点详情" title="关闭详情">
+                    <button class="mindmap-detail__close" id="mindmapDetailCloseBtn" type="button" aria-label="关闭节点详情" title="关闭详情" data-tooltip="关闭详情">
                       <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-x"></use></svg>
                     </button>
                   </div>
@@ -337,16 +390,16 @@
                     <div class="mindmap-node-editor__row">
                       <label for="mindmapNodeTitleInput">节点标题</label>
                       <input class="input" id="mindmapNodeTitleInput" type="text" maxlength="120" autocomplete="off">
-                      <button class="btn btn--primary btn--small" id="mindmapSaveNodeBtn" type="button">保存</button>
+                      <button class="icon-btn icon-btn--accent" id="mindmapSaveNodeBtn" type="button" title="保存节点标题" data-tooltip="保存标题" aria-label="保存节点标题">
+                        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-check"></use></svg>
+                      </button>
                     </div>
                     <div class="mindmap-node-editor__actions">
-                      <button class="btn btn--small" id="mindmapAddChildBtn" type="button">
-                        <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
-                        添加子节点
+                      <button class="icon-btn" id="mindmapAddChildBtn" type="button" title="添加子节点" data-tooltip="添加子节点" aria-label="添加子节点">
+                        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
                       </button>
-                      <button class="btn btn--small mindmap-delete-node" id="mindmapDeleteNodeBtn" type="button">
-                        <svg class="icon icon--tiny" aria-hidden="true"><use href="assets/icons.svg#icon-trash"></use></svg>
-                        删除节点
+                      <button class="icon-btn icon-btn--danger mindmap-delete-node" id="mindmapDeleteNodeBtn" type="button" title="删除节点" data-tooltip="删除节点" aria-label="删除节点">
+                        <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-trash"></use></svg>
                       </button>
                     </div>
                     <p class="mindmap-node-editor__hint">拖动节点到另一个节点上可调整层级；修改会写回 Markdown 大纲。</p>
@@ -364,9 +417,9 @@
           </section>
 
           <details class="cheat-sheet" id="cheatSheet">
-            <summary>
+            <summary class="cheat-toggle" title="LaTeX 速查 · 大学课程常用" data-tooltip="LaTeX 速查" data-tooltip-pos="top" aria-label="LaTeX 速查">
               <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-sigma"></use></svg>
-              LaTeX 速查 · 大学课程常用
+              <span class="visually-hidden">LaTeX 速查 · 大学课程常用</span>
               <svg class="icon icon--tiny chevron" aria-hidden="true"><use href="assets/icons.svg#icon-chevron-down"></use></svg>
             </summary>
             <div class="cheat-sheet__body">
@@ -493,13 +546,11 @@
           <h2>还没有打开的一页</h2>
           <p>新建一篇 Aster 笔记，把知识、思路和公式一起留在本子里。所有内容只保存在当前浏览器。</p>
           <div class="button-row">
-            <button class="btn btn--primary" type="button" data-action="new-note">
+            <button class="icon-btn icon-btn--accent" type="button" data-action="new-note" title="新建第一篇笔记" data-tooltip="新建第一篇笔记" aria-label="新建第一篇笔记">
               <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-plus"></use></svg>
-              新建第一篇笔记
             </button>
-            <button class="btn" type="button" data-action="load-sample">
+            <button class="icon-btn" type="button" data-action="load-sample" title="载入示例" data-tooltip="载入示例" aria-label="载入示例">
               <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-book"></use></svg>
-              载入示例
             </button>
           </div>
         </div>
@@ -538,6 +589,49 @@
       </form>
     </div>
   </div>
+
+  <dialog class="app-dialog template-dialog" id="templateDialog" aria-labelledby="templateDialogTitle">
+    <form class="dialog__form" id="templateForm" novalidate>
+      <div class="template-dialog__head">
+        <div>
+          <p class="eyebrow dialog__eyebrow">ASTER · CUSTOM TEMPLATE</p>
+          <h2 class="dialog__title" id="templateDialogTitle">自定义模板</h2>
+        </div>
+        <button class="icon-btn" id="templateDialogClose" type="button" title="关闭模板管理" data-tooltip="关闭" aria-label="关闭模板管理">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-x"></use></svg>
+        </button>
+      </div>
+      <p class="dialog__message">自定义模板会保存在当前浏览器 localStorage，新建笔记时可直接调用。模板内容仍然是普通 Markdown。</p>
+
+      <div class="field">
+        <label for="templateName">模板名称 <span class="field-label__hint">必填，最多 40 字</span></label>
+        <input class="input" id="templateName" type="text" maxlength="40" placeholder="例如：课程复盘" autocomplete="off" required>
+      </div>
+      <div class="field">
+        <label for="templateDescription">一句话说明 <span class="field-label__hint">可选</span></label>
+        <input class="input" id="templateDescription" type="text" maxlength="80" placeholder="会显示在模板菜单里" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="templateContent">Markdown 内容 <span class="field-label__hint">必填，最多 50,000 字</span></label>
+        <textarea class="textarea textarea--mono" id="templateContent" rows="8" maxlength="50000" placeholder="## 主题&#10;&#10;## 要点&#10;&#10;## 总结" required></textarea>
+      </div>
+      <p class="form-error" id="templateFormError" role="alert" hidden></p>
+
+      <section class="template-dialog__saved" aria-labelledby="customTemplateSavedTitle">
+        <h3 class="dialog__section-title" id="customTemplateSavedTitle">已保存的自定义模板</h3>
+        <div class="custom-template-list" id="customTemplateList"></div>
+      </section>
+
+      <div class="dialog__actions">
+        <button class="icon-btn" id="templateDialogCancel" type="button" title="取消并关闭" data-tooltip="取消" aria-label="取消并关闭">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-x"></use></svg>
+        </button>
+        <button class="icon-btn icon-btn--accent" id="templateSaveBtn" type="submit" title="保存自定义模板" data-tooltip="保存模板" aria-label="保存自定义模板">
+          <svg class="icon" aria-hidden="true"><use href="assets/icons.svg#icon-check"></use></svg>
+        </button>
+      </div>
+    </form>
+  </dialog>
 
   <input class="visually-hidden" id="importNoteFile" type="file" accept=".md,.txt,text/markdown,text/plain" tabindex="-1">
 

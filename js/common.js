@@ -207,7 +207,12 @@
     const label = $('[data-theme-label]', dock);
     if (label) label.textContent = meta.label;
     const summary = $('summary', dock);
-    if (summary) summary.title = `切换界面主题（当前：${meta.label}）`;
+    if (summary) {
+      summary.title = `切换界面主题（当前：${meta.label}）`;
+      // Aster V2 turns this global control into an icon-only button on its page;
+      // other pages keep the visible "主题 · 当前主题" capsule.
+      summary.dataset.tooltip = summary.title;
+    }
     $$('[data-theme-choice]', dock).forEach((button) => {
       const active = button.dataset.themeChoice === themeId;
       button.classList.toggle('is-active', active);

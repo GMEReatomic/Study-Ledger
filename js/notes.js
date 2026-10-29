@@ -10,6 +10,8 @@
   const T = window.Toolbox;
   const FOLDERS_KEY = 'asterFolders';
   const NOTE_ORDER_KEY = 'asterNoteOrder';
+  const TAB_SESSION_KEY = 'asterTabs.v1';
+  const CUSTOM_TEMPLATES_KEY = 'asterCustomTemplates.v1';
   const ALL_FOLDERS = '__all__';
   const UNCATEGORIZED = '';
   const RENDERER_URLS = {
@@ -41,6 +43,75 @@
   };
 
   const NEW_NOTE_CONTENT = '## 主题\n\n\n## 要点\n\n\n## 补充\n\n';
+
+  // 内置模板是代码的一部分；自定义模板只存 localStorage，不写入 IndexedDB。
+  const BUILTIN_TEMPLATES = [
+    {
+      id: 'builtin-theorem',
+      name: '定理证明',
+      description: '条件、证明、扩展与例题',
+      content: [
+        '## 定理描述',
+        '',
+        '> 写清楚已知条件、结论和适用范围。',
+        '',
+        '## 证明过程',
+        '',
+        '1. 写出要证明的结论。',
+        '2. 选择合适的定义或定理。',
+        '3. 逐步推导，并在关键步骤标注理由。',
+        '',
+        '## 扩展与例题',
+        '',
+        '- 逆命题是否成立？',
+        '- 尝试构造一个反例。'
+      ].join('\n')
+    },
+    {
+      id: 'builtin-mistake',
+      name: '错题复盘',
+      description: '题目、错因、正解与知识点',
+      content: [
+        '## 题目',
+        '',
+        '> 先完整抄下题目，再写自己的第一反应。',
+        '',
+        '## 错误原因',
+        '',
+        '- 是概念不清、计算失误，还是审题遗漏？',
+        '',
+        '## 正确解法',
+        '',
+        '1. ',
+        '2. ',
+        '',
+        '## 相关知识点',
+        '',
+        '- '
+      ].join('\n')
+    },
+    {
+      id: 'builtin-algorithm',
+      name: '算法模板',
+      description: '核心思想、复杂度与代码',
+      content: [
+        '## 核心思想',
+        '',
+        '> 用两三句话说明算法在做什么。',
+        '',
+        '## 复杂度分析',
+        '',
+        '- 时间复杂度：',
+        '- 空间复杂度：',
+        '',
+        '## 代码实现',
+        '',
+        '```python',
+        '# 在这里写代码',
+        '```'
+      ].join('\n')
+    }
+  ];
   const SAMPLE_CONTENT = [
     '# 示例：因式分解',
     '',
@@ -101,7 +172,12 @@
     scrollSyncFrame: 0,
     scrollSyncTimer: 0,
     scrollSyncLock: false,
-    dragNoteId: ''
+    dragNoteId: '',
+    // 多标签页状态只在当前浏览器会话中保存，不进入 IndexedDB。
+    openTabs: [],
+    activeTab: null,
+    tabChain: Promise.resolve(),
+    customTemplates: []
   };
 
   const els = {};
@@ -120,7 +196,10 @@
       'mindmapTab', 'mindmapView', 'cheatSheet', 'focusCheatBtn', 'noteContextMenu',
       'contextFolderList', 'contextNewFolderForm', 'contextNewFolderInput',
       'mindmapNodeEditor', 'mindmapNodeTitleInput', 'mindmapSaveNodeBtn',
-      'mindmapAddChildBtn', 'mindmapDeleteNodeBtn'
+      'mindmapAddChildBtn', 'mindmapDeleteNodeBtn', 'noteTabBar', 'templateMenu',
+      'templateList', 'manageTemplatesBtn', 'templateDialog', 'templateForm',
+      'templateName', 'templateDescription', 'templateContent', 'templateFormError',
+      'templateDialogClose', 'templateDialogCancel', 'templateSaveBtn', 'customTemplateList'
     ].forEach((id) => {
       els[id] = document.getElementById(id);
     });
@@ -246,6 +325,150 @@
 
   function findNote(id) {
     return state.notes.find((note) => note.id === id) || null;
+  }
+
+  /* ------------------------------------------------------------------------
+     多标签页：只在当前标签页的 sessionStorage 中保存“打开过哪些笔记”。
+     ------------------------------------------------------------------------ */
+  function readTabSession() {
+    try {
+      const raw = window.sessionStorage.getItem(TAB_SESSION_KEY);
+      if (raw === null) return { present: false, tabs: [], active: '' };
+      const parsed = JSON.parse(raw);
+      return {
+        present: true,
+        tabs: Array.isArray(parsed && parsed.tabs) ? parsed.tabs.map(String) : [],
+        active: parsed && parsed.active ? String(parsed.active) : ''
+      };
+    } catch (error) {
+      return { present: false, tabs: [], active: '' };
+    }
+  }
+
+  function persistTabState() {
+    try {
+      window.sessionStorage.setItem(TAB_SESSION_KEY, JSON.stringify({
+        tabs: state.openTabs.slice(),
+        active: state.activeTab || ''
+      }));
+    } catch (error) {
+      // 隐私模式或存储被禁用时，标签页仍可在当前页面内存中工作。
+    }
+  }
+
+  function ensureOpenTab(id) {
+    if (!id || !findNote(id) || state.openTabs.includes(id)) return;
+    state.openTabs.push(id);
+  }
+
+  function renderTabs() {
+    if (!els.noteTabBar) return;
+    const tabs = state.openTabs.map(findNote).filter(Boolean);
+    els.noteTabBar.classList.toggle('is-empty', tabs.length === 0);
+    els.noteTabBar.innerHTML = tabs.map((note) => {
+      const active = note.id === state.activeId;
+      return `
+        <div class="note-tab${active ? ' is-active' : ''}" role="tab" tabindex="${active ? '0' : '-1'}" aria-selected="${active ? 'true' : 'false'}" aria-controls="editorPane" data-tab-id="${T.escapeHtml(note.id)}" title="${T.escapeHtml(note.title)}">
+          ${T.iconMarkup('note', 'icon--tiny')}
+          <span class="note-tab__title">${T.escapeHtml(note.title)}</span>
+          <button class="note-tab__close" type="button" data-close-tab="${T.escapeHtml(note.id)}" title="关闭标签页" data-tooltip="关闭标签页" aria-label="关闭标签页：${T.escapeHtml(note.title)}">
+            ${T.iconMarkup('x', 'icon--tiny')}
+          </button>
+        </div>`;
+    }).join('');
+  }
+
+  function queueTabTask(task) {
+    const run = state.tabChain.catch(() => undefined).then(task);
+    state.tabChain = run.catch(() => undefined);
+    return run;
+  }
+
+  function activateTab(id, options = {}) {
+    return queueTabTask(async () => {
+      const note = findNote(id);
+      if (!note) return false;
+      ensureOpenTab(id);
+      if (id === state.activeId) {
+        state.activeTab = id;
+        renderTabs();
+        persistTabState();
+        if (options.focusTitle) {
+          els.noteTitle.focus();
+          els.noteTitle.select();
+        } else {
+          closeSidebar();
+        }
+        return true;
+      }
+
+      // 切走之前先保存当前标签；第二次 flush 覆盖 await 期间产生的新输入。
+      await flushSave();
+      if (state.dirty) await flushSave();
+
+      const next = findNote(id);
+      if (!next) return false;
+      state.activeId = id;
+      state.activeTab = id;
+      state.dirty = false;
+      updateEditorAvailability(true);
+      populateEditor(next);
+      renderSidebar();
+      renderTabs();
+      persistTabState();
+      if (options.focusTitle) {
+        els.noteTitle.focus();
+        els.noteTitle.select();
+      } else {
+        closeSidebar();
+      }
+      return true;
+    });
+  }
+
+  function closeTab(id) {
+    return queueTabTask(async () => {
+      const index = state.openTabs.indexOf(id);
+      if (index < 0) return false;
+      const wasActive = id === state.activeId;
+      if (wasActive) {
+        await flushSave();
+        if (state.dirty) await flushSave();
+      }
+      state.openTabs.splice(index, 1);
+
+      if (!wasActive) {
+        persistTabState();
+        renderTabs();
+        return true;
+      }
+
+      const nextId = state.openTabs[Math.min(index, state.openTabs.length - 1)] || null;
+      const next = nextId ? findNote(nextId) : null;
+      if (next) {
+        state.activeId = next.id;
+        state.activeTab = next.id;
+        state.dirty = false;
+        updateEditorAvailability(true);
+        populateEditor(next);
+        renderSidebar();
+        renderTabs();
+        persistTabState();
+        return true;
+      }
+
+      // 最后一个标签关闭：退出全屏，显示现有空状态。
+      state.activeId = null;
+      state.activeTab = null;
+      state.dirty = false;
+      setPreviewFullscreen(false);
+      updateEditorAvailability(false);
+      clearEditorAfterDelete();
+      renderSidebar();
+      renderTabs();
+      persistTabState();
+      return true;
+    });
   }
 
   function formatNoteDate(value) {
@@ -415,7 +638,9 @@
     if (els.exportMarkdownBtn) els.exportMarkdownBtn.disabled = !hasNote;
     if (els.exportHtmlBtn) els.exportHtmlBtn.disabled = !hasNote;
     if (els.mindmapTab) els.mindmapTab.disabled = !hasNote;
+    if (els.previewFullscreenBtn) els.previewFullscreenBtn.disabled = !hasNote;
     if (els.notesApp) els.notesApp.classList.toggle('is-empty', !hasNote);
+    if (!hasNote && state.previewFullscreen) setPreviewFullscreen(false);
     if (!hasNote) hideDeleteConfirmation();
   }
 
@@ -544,29 +769,21 @@
   }
 
   async function selectNote(id, options = {}) {
-    if (!id || id === state.activeId) {
+    if (!id) {
       closeSidebar();
       return;
     }
-    await flushSave();
-    if (state.dirty) await flushSave();
     const note = findNote(id);
     if (!note) return;
-    state.activeId = id;
-    state.dirty = false;
-    populateEditor(note);
-    renderSidebar();
-    if (state.notes.length) {
-      if (options.focusTitle) {
-        els.noteTitle.focus();
-        els.noteTitle.select();
-      } else {
-        closeSidebar();
-      }
-    }
+    ensureOpenTab(id);
+    renderTabs();
+    persistTabState();
+    await activateTab(id, options);
   }
 
   async function createNote(options = {}) {
+    // 先等待正在进行的 Tab 切换，避免“新建”与“切换”同时改写 activeId。
+    await state.tabChain.catch(() => undefined);
     await flushSave();
     const now = new Date().toISOString();
     const sample = Boolean(options.sample);
@@ -597,7 +814,9 @@
       state.folders.push(note.folder);
       saveFolders();
     }
+    ensureOpenTab(note.id);
     state.activeId = note.id;
+    state.activeTab = note.id;
     state.search = '';
     state.activeTag = '';
     state.dirty = false;
@@ -605,6 +824,8 @@
     updateEditorAvailability(true);
     populateEditor(note);
     renderSidebar();
+    renderTabs();
+    persistTabState();
     setSaveStatus('saved', '已保存');
     if (els.notesApp) {
       els.notesApp.dataset.pane = 'editor';
@@ -642,6 +863,7 @@
 
   function clearEditorAfterDelete() {
     state.activeId = null;
+    state.activeTab = null;
     updateEditorAvailability(false);
     if (els.noteTitle) els.noteTitle.value = '';
     if (els.noteTags) els.noteTags.value = '';
@@ -654,6 +876,7 @@
   }
 
   async function deleteCurrentNote() {
+    await state.tabChain.catch(() => undefined);
     const note = activeNote();
     if (!note) return;
     hideDeleteConfirmation();
@@ -670,17 +893,31 @@
     }
 
     const index = state.notes.findIndex((item) => item.id === note.id);
+    const tabIndex = state.openTabs.indexOf(note.id);
     state.notes = state.notes.filter((item) => item.id !== note.id);
     state.noteOrder = state.noteOrder.filter((id) => id !== note.id);
+    state.openTabs = state.openTabs.filter((id) => id !== note.id);
     saveNoteOrder();
-    const next = state.notes[Math.min(index, state.notes.length - 1)] || null;
+
+    const nextTabId = state.openTabs[Math.min(Math.max(tabIndex, 0), state.openTabs.length - 1)] || '';
+    const next = (nextTabId ? findNote(nextTabId) : null)
+      || state.notes[Math.min(index, state.notes.length - 1)]
+      || null;
     if (next) {
+      ensureOpenTab(next.id);
       state.activeId = next.id;
+      state.activeTab = next.id;
+      state.dirty = false;
+      updateEditorAvailability(true);
       populateEditor(next);
     } else {
+      state.activeTab = null;
+      setPreviewFullscreen(false);
       clearEditorAfterDelete();
     }
     renderSidebar();
+    renderTabs();
+    persistTabState();
     T.toast('笔记已删除。', { type: 'info' });
   }
 
@@ -1511,9 +1748,11 @@
     document.body.classList.toggle('preview-fullscreen-open', state.previewFullscreen);
     els.previewFullscreenBtn.setAttribute('aria-pressed', String(state.previewFullscreen));
     const use = els.previewFullscreenBtn.querySelector('use');
-    const label = els.previewFullscreenBtn.querySelector('span');
     if (use) use.setAttribute('href', `assets/icons.svg#icon-${state.previewFullscreen ? 'minimize' : 'maximize'}`);
-    if (label) label.textContent = state.previewFullscreen ? '退出' : '全屏';
+    const label = state.previewFullscreen ? '退出全屏预览' : '全屏预览';
+    els.previewFullscreenBtn.setAttribute('aria-label', label);
+    els.previewFullscreenBtn.setAttribute('title', `${label}（Esc 退出）`);
+    els.previewFullscreenBtn.dataset.tooltip = label;
     if (state.previewFullscreen) {
       els.previewScroll?.setAttribute('tabindex', '-1');
       els.previewScroll?.focus({ preventScroll: true });
@@ -1602,6 +1841,181 @@
     els.cheatSheet.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     const summary = els.cheatSheet.querySelector('summary');
     if (summary) summary.focus();
+  }
+
+  /* ------------------------------------------------------------------------
+     模板：内置模板 + localStorage 自定义模板
+     ------------------------------------------------------------------------ */
+  function normalizeCustomTemplate(item) {
+    if (!T.isPlainObject(item)) return null;
+    const name = String(item.name || '').trim().slice(0, 40);
+    const content = String(item.content || '').slice(0, 50000);
+    if (!name || !content.trim()) return null;
+    return {
+      id: String(item.id || `custom-${T.uid()}`),
+      name,
+      description: String(item.description || '').trim().slice(0, 80),
+      content,
+      custom: true
+    };
+  }
+
+  function loadCustomTemplates() {
+    const raw = T.storageGetJSON(CUSTOM_TEMPLATES_KEY, []);
+    if (!Array.isArray(raw)) return [];
+    return raw.map(normalizeCustomTemplate).filter(Boolean).slice(0, 30);
+  }
+
+  function saveCustomTemplates() {
+    T.storageSetJSON(CUSTOM_TEMPLATES_KEY, state.customTemplates);
+  }
+
+  function allTemplates() {
+    return [...BUILTIN_TEMPLATES, ...state.customTemplates];
+  }
+
+  function templateById(id) {
+    return allTemplates().find((template) => template.id === id) || null;
+  }
+
+  function renderTemplateMenu() {
+    if (!els.templateList) return;
+    const items = allTemplates();
+    els.templateList.innerHTML = items.length
+      ? items.map((template) => `
+        <button class="template-menu__item" type="button" role="menuitem" data-template-id="${T.escapeHtml(template.id)}" title="使用「${T.escapeHtml(template.name)}」模板">
+          ${T.iconMarkup('template', 'icon--tiny')}
+          <span class="template-menu__copy">
+            <strong>${T.escapeHtml(template.name)}</strong>
+            <small>${T.escapeHtml(template.description || '自定义 Markdown 模板')}</small>
+          </span>
+          ${template.custom ? '<span class="template-menu__badge">自定义</span>' : ''}
+        </button>
+      `).join('')
+      : '<p class="template-menu__empty">还没有模板。</p>';
+  }
+
+  function renderCustomTemplateList() {
+    if (!els.customTemplateList) return;
+    if (!state.customTemplates.length) {
+      els.customTemplateList.innerHTML = '<p class="custom-template-list__empty">还没有自定义模板；保存后会出现在这里和新建菜单中。</p>';
+      return;
+    }
+    els.customTemplateList.innerHTML = state.customTemplates.map((template) => `
+      <div class="custom-template-item">
+        <span class="custom-template-item__icon">${T.iconMarkup('template', 'icon--tiny')}</span>
+        <span class="custom-template-item__copy">
+          <strong>${T.escapeHtml(template.name)}</strong>
+          <small>${T.escapeHtml(template.description || '自定义 Markdown 模板')}</small>
+        </span>
+        <button class="icon-btn icon-btn--danger" type="button" data-delete-template="${T.escapeHtml(template.id)}" title="删除模板" data-tooltip="删除模板" aria-label="删除模板：${T.escapeHtml(template.name)}">
+          ${T.iconMarkup('trash', 'icon--tiny')}
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function showTemplateError(message) {
+    if (!els.templateFormError) return;
+    els.templateFormError.textContent = message;
+    els.templateFormError.hidden = false;
+  }
+
+  function hideTemplateError() {
+    if (!els.templateFormError) return;
+    els.templateFormError.hidden = true;
+    els.templateFormError.textContent = '';
+  }
+
+  function openTemplateDialog() {
+    if (!els.templateDialog) return;
+    if (els.templateMenu) els.templateMenu.open = false;
+    renderCustomTemplateList();
+    renderTemplateMenu();
+    hideTemplateError();
+    if (!els.templateDialog.open) els.templateDialog.showModal();
+    window.setTimeout(() => els.templateName?.focus(), 80);
+  }
+
+  function closeTemplateDialog() {
+    if (els.templateDialog && els.templateDialog.open) els.templateDialog.close();
+  }
+
+  function handleTemplateSubmit(event) {
+    event.preventDefault();
+    hideTemplateError();
+    const name = String(els.templateName?.value || '').trim().slice(0, 40);
+    const description = String(els.templateDescription?.value || '').trim().slice(0, 80);
+    const content = String(els.templateContent?.value || '').slice(0, 50000);
+    if (!name) {
+      showTemplateError('请先填写模板名称。');
+      els.templateName?.focus();
+      return;
+    }
+    if (!content.trim()) {
+      showTemplateError('请填写 Markdown 模板内容。');
+      els.templateContent?.focus();
+      return;
+    }
+    if (state.customTemplates.length >= 30) {
+      showTemplateError('自定义模板最多保存 30 个，请先删除不用的模板。');
+      return;
+    }
+    if (allTemplates().some((template) => template.name.toLowerCase() === name.toLowerCase())) {
+      showTemplateError('已经有同名模板，请换一个名称。');
+      els.templateName?.focus();
+      return;
+    }
+
+    state.customTemplates.push({
+      id: `custom-${T.uid()}`,
+      name,
+      description,
+      content,
+      custom: true
+    });
+    saveCustomTemplates();
+    renderTemplateMenu();
+    renderCustomTemplateList();
+    if (els.templateForm) els.templateForm.reset();
+    T.toast(`模板「${name}」已保存。`, { type: 'success', duration: 2200 });
+    els.templateName?.focus();
+  }
+
+  async function deleteCustomTemplate(id) {
+    const template = state.customTemplates.find((item) => item.id === id);
+    if (!template) return;
+    const ok = await T.confirmDialog({
+      title: '删除自定义模板',
+      message: `确定删除「${template.name}」吗？已创建的笔记不会受到影响。`,
+      confirmText: '删除',
+      cancelText: '取消',
+      danger: true
+    });
+    if (!ok) return;
+    state.customTemplates = state.customTemplates.filter((item) => item.id !== id);
+    saveCustomTemplates();
+    renderTemplateMenu();
+    renderCustomTemplateList();
+    T.toast('自定义模板已删除。', { type: 'info' });
+  }
+
+  async function createNoteFromTemplate(template) {
+    if (!template) return;
+    if (els.templateMenu) els.templateMenu.open = false;
+    const note = await createNote({
+      title: template.name,
+      content: template.content,
+      tags: template.tags || [],
+      focusTitle: false,
+      toast: `已从「${template.name}」模板新建笔记。`
+    });
+    if (!note) return;
+    setPane('editor');
+    window.setTimeout(() => {
+      els.markdownInput?.focus();
+      els.markdownInput?.setSelectionRange(0, 0);
+    }, 70);
   }
 
   /* ------------------------------------------------------------------------
@@ -2080,6 +2494,71 @@ ${katexStyles}
   function bindEvents() {
     els.newNoteBtn?.addEventListener('click', () => createNote());
     els.sampleNoteBtn?.addEventListener('click', () => createNote({ sample: true }));
+
+    // 标签栏：点击切换、关闭按钮、方向键与中键关闭。
+    els.noteTabBar?.addEventListener('click', (event) => {
+      const close = event.target.closest('[data-close-tab]');
+      if (close) {
+        event.preventDefault();
+        event.stopPropagation();
+        closeTab(close.dataset.closeTab);
+        return;
+      }
+      const tab = event.target.closest('[data-tab-id]');
+      if (tab) selectNote(tab.dataset.tabId);
+    });
+    els.noteTabBar?.addEventListener('auxclick', (event) => {
+      if (event.button !== 1) return;
+      const tab = event.target.closest('[data-tab-id]');
+      if (!tab) return;
+      event.preventDefault();
+      closeTab(tab.dataset.tabId);
+    });
+    els.noteTabBar?.addEventListener('keydown', (event) => {
+      const tab = event.target.closest('[data-tab-id]');
+      if (!tab) return;
+      const index = state.openTabs.indexOf(tab.dataset.tabId);
+      if (index < 0) return;
+      if (event.key === 'Delete' || event.key === 'Backspace') {
+        event.preventDefault();
+        closeTab(tab.dataset.tabId);
+        return;
+      }
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+      event.preventDefault();
+      let nextIndex = index;
+      if (event.key === 'ArrowLeft') nextIndex = Math.max(0, index - 1);
+      if (event.key === 'ArrowRight') nextIndex = Math.min(state.openTabs.length - 1, index + 1);
+      if (event.key === 'Home') nextIndex = 0;
+      if (event.key === 'End') nextIndex = state.openTabs.length - 1;
+      const nextId = state.openTabs[nextIndex];
+      if (!nextId) return;
+      selectNote(nextId);
+      window.setTimeout(() => {
+        const nextTab = Array.from(els.noteTabBar?.querySelectorAll('[data-tab-id]') || [])
+          .find((node) => node.dataset.tabId === nextId);
+        nextTab?.focus();
+      }, 40);
+    });
+
+    // 模板菜单与自定义模板对话框。
+    els.templateList?.addEventListener('click', (event) => {
+      const item = event.target.closest('[data-template-id]');
+      if (!item) return;
+      if (els.templateMenu) els.templateMenu.open = false;
+      createNoteFromTemplate(templateById(item.dataset.templateId));
+    });
+    els.manageTemplatesBtn?.addEventListener('click', openTemplateDialog);
+    els.customTemplateList?.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-delete-template]');
+      if (button) deleteCustomTemplate(button.dataset.deleteTemplate);
+    });
+    els.templateForm?.addEventListener('submit', handleTemplateSubmit);
+    els.templateDialogClose?.addEventListener('click', closeTemplateDialog);
+    els.templateDialogCancel?.addEventListener('click', closeTemplateDialog);
+    els.templateDialog?.addEventListener('click', (event) => {
+      if (event.target === els.templateDialog) closeTemplateDialog();
+    });
     T.$$('[data-action="new-note"]').forEach((button) => {
       button.addEventListener('click', () => createNote());
     });
@@ -2113,13 +2592,18 @@ ${katexStyles}
       renderSidebar();
     });
 
-    els.noteTitle?.addEventListener('input', markDirty);
+    els.noteTitle?.addEventListener('input', () => {
+      markDirty();
+      // 标题输入时同步标签栏，不需要等保存完成。
+      renderTabs();
+    });
     els.noteTitle?.addEventListener('blur', () => {
       if (!activeNote()) return;
       if (!els.noteTitle.value.trim()) {
         els.noteTitle.value = '未命名笔记';
         markDirty();
       }
+      renderTabs();
     });
     els.noteTags?.addEventListener('input', () => {
       renderTagChips(normalizeTags(els.noteTags.value));
@@ -2237,6 +2721,7 @@ ${katexStyles}
       if (document.hidden && state.dirty) flushSave();
     });
     window.addEventListener('pagehide', () => {
+      persistTabState();
       if (state.dirty) flushSave();
     });
   }
@@ -2244,6 +2729,9 @@ ${katexStyles}
   async function init() {
     cacheElements();
     loadFolderState();
+    state.customTemplates = loadCustomTemplates();
+    renderTemplateMenu();
+    renderCustomTemplateList();
     bindEvents();
     updateRendererStatus();
 
@@ -2261,17 +2749,44 @@ ${katexStyles}
     const params = new URLSearchParams(window.location.search);
     const requestedId = params.get('note') || '';
     const requested = requestedId ? findNote(requestedId) : null;
+    const savedTabs = readTabSession();
+    let initial = null;
 
-    if (state.notes.length) {
-      const initial = requested || state.notes[0];
+    if (requested) {
+      state.openTabs = savedTabs.tabs.filter((id) => findNote(id));
+      ensureOpenTab(requested.id);
+      initial = requested;
+    } else if (savedTabs.present) {
+      state.openTabs = savedTabs.tabs.filter((id) => findNote(id));
+      // 会话里只留下已删除笔记的 ID 时，回退到第一篇，避免无意义空白。
+      if (!state.openTabs.length && savedTabs.tabs.length && state.notes.length) {
+        state.openTabs = [state.notes[0].id];
+      }
+      if (savedTabs.active && state.openTabs.includes(savedTabs.active)) {
+        initial = findNote(savedTabs.active);
+      } else if (state.openTabs.length) {
+        initial = findNote(state.openTabs[0]);
+      }
+    } else if (state.notes.length) {
+      // 新会话默认打开第一篇笔记；用户关闭所有 Tab 后，sessionStorage 会保留空数组。
+      state.openTabs = [state.notes[0].id];
+      initial = state.notes[0];
+    }
+
+    if (initial) {
       state.activeId = initial.id;
+      state.activeTab = initial.id;
       updateEditorAvailability(true);
       populateEditor(initial);
     } else {
+      state.activeId = null;
+      state.activeTab = null;
       updateEditorAvailability(false);
       clearEditorAfterDelete();
     }
     renderSidebar();
+    renderTabs();
+    persistTabState();
     loadRendererLibraries();
 
     if (params.get('new') === '1') {

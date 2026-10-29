@@ -7,7 +7,7 @@
    ========================================================================== */
 'use strict';
 
-const CACHE_NAME = 'yipan-toolbox-v1.6.4';
+const CACHE_NAME = 'yipan-toolbox-v1.7.2';
 
 const CORE_ASSETS = [
   './',

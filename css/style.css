@@ -9195,3 +9195,1175 @@ html[data-theme="gray"] .btn--primary {
   }
 }
 
+/* ==========================================================================
+   Aster V2 · Obsidian-like workspace
+   - icon-only controls and delayed CSS tooltips
+   - multi-note tabs and a full-screen tab strip
+   - template menu / custom template dialog
+   ========================================================================== */
+
+/* Icon-only buttons ------------------------------------------------------- */
+.aster-page .icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--ink-faint);
+  background: transparent;
+  box-shadow: none;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 140ms var(--ease), background 140ms var(--ease), border-color 140ms var(--ease);
+}
+
+.aster-page .icon-btn .icon {
+  width: 15px;
+  height: 15px;
+  color: currentColor;
+}
+
+.aster-page .icon-btn:hover {
+  border-color: transparent;
+  color: var(--ink);
+  background: var(--paper-deep);
+}
+
+.aster-page .icon-btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: 1px;
+}
+
+.aster-page .icon-btn[disabled] {
+  opacity: 0.34;
+  cursor: not-allowed;
+  background: transparent;
+}
+
+.aster-page .icon-btn--accent {
+  color: var(--brown);
+}
+
+.aster-page .icon-btn--accent:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--brown) 12%, transparent);
+}
+
+.aster-page .icon-btn--danger {
+  color: var(--danger);
+}
+
+.aster-page .icon-btn--danger:hover {
+  color: var(--danger);
+  background: var(--danger-soft);
+}
+
+/* Delayed CSS tooltip: native title remains for accessibility fallback. */
+.aster-page [data-tooltip] {
+  position: relative;
+}
+
+.aster-page [data-tooltip]::after {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 50%;
+  z-index: 400;
+  max-width: 220px;
+  padding: 5px 8px;
+  border: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  border-radius: 5px;
+  color: var(--panel);
+  background: var(--ink);
+  box-shadow: 0 5px 15px rgba(27, 34, 38, 0.18);
+  content: attr(data-tooltip);
+  font-family: var(--font-body);
+  font-size: 9.5px;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: 0;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, -3px);
+  transition: opacity 120ms ease 0s, transform 120ms ease 0s, visibility 0s linear 120ms;
+}
+
+.aster-page [data-tooltip]::before {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 50%;
+  z-index: 401;
+  width: 7px;
+  height: 7px;
+  border: inherit;
+  background: var(--ink);
+  content: "";
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, -3px) rotate(45deg);
+  transition: opacity 120ms ease 0s, visibility 0s linear 120ms;
+}
+
+.aster-page [data-tooltip]:hover::after,
+.aster-page [data-tooltip]:focus-visible::after,
+.aster-page [data-tooltip]:hover::before,
+.aster-page [data-tooltip]:focus-visible::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition-delay: 500ms, 500ms, 0s;
+}
+
+.aster-page [data-tooltip]:hover::before,
+.aster-page [data-tooltip]:focus-visible::before {
+  transform: translate(-50%, 0) rotate(45deg);
+}
+
+.aster-page [data-tooltip-pos="top"]::after {
+  top: auto;
+  bottom: calc(100% + 7px);
+}
+
+.aster-page [data-tooltip-pos="top"]::before {
+  top: auto;
+  bottom: calc(100% + 2px);
+}
+
+/* Topbar actions are right-aligned, so their tooltip grows leftwards. */
+.aster-page .notes-topbar__actions [data-tooltip]::after {
+  right: 0;
+  left: auto;
+  transform: translateY(-3px);
+}
+
+.aster-page .notes-topbar__actions [data-tooltip]::before {
+  right: 10px;
+  left: auto;
+  transform: translateY(-3px) rotate(45deg);
+}
+
+.aster-page .notes-topbar__actions [data-tooltip]:hover::after,
+.aster-page .notes-topbar__actions [data-tooltip]:focus-visible::after {
+  transform: translateY(0);
+}
+
+.aster-page .notes-topbar__actions [data-tooltip]:hover::before,
+.aster-page .notes-topbar__actions [data-tooltip]:focus-visible::before {
+  transform: translateY(0) rotate(45deg);
+}
+
+/* Right-edge controls must not let a hidden tooltip widen the page. */
+.aster-page .theme-dock > summary[data-tooltip]::after,
+.aster-page .note-tab__close[data-tooltip]::after {
+  right: 0;
+  left: auto;
+  transform: translateY(-3px);
+}
+
+.aster-page .theme-dock > summary[data-tooltip]::before,
+.aster-page .note-tab__close[data-tooltip]::before {
+  right: 10px;
+  left: auto;
+  transform: translateY(-3px) rotate(45deg);
+}
+
+.aster-page .theme-dock > summary[data-tooltip]:hover::after,
+.aster-page .theme-dock > summary[data-tooltip]:focus-visible::after,
+.aster-page .note-tab__close[data-tooltip]:hover::after,
+.aster-page .note-tab__close[data-tooltip]:focus-visible::after {
+  transform: translateY(0);
+}
+
+.aster-page .theme-dock > summary[data-tooltip]:hover::before,
+.aster-page .theme-dock > summary[data-tooltip]:focus-visible::before,
+.aster-page .note-tab__close[data-tooltip]:hover::before,
+.aster-page .note-tab__close[data-tooltip]:focus-visible::before {
+  transform: translateY(0) rotate(45deg);
+}
+
+/* Topbar / title ---------------------------------------------------------- */
+.aster-page .notes-topbar {
+  min-height: 54px;
+  gap: 9px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.aster-page .notes-library-toggle {
+  width: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0;
+}
+
+.aster-page .notes-title-field {
+  min-height: 34px;
+  font-size: 19px;
+}
+
+.aster-page .notes-topbar__actions {
+  gap: 2px;
+}
+
+.aster-page .notes-topbar__actions .save-status {
+  min-width: 54px;
+  margin-right: 3px;
+  font-size: 9px;
+}
+
+.aster-page .notes-topbar__actions .mini-menu > summary {
+  width: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+  justify-content: center;
+}
+
+.aster-page .notes-topbar__actions .mini-menu > summary:hover,
+.aster-page .notes-topbar__actions .mini-menu[open] > summary {
+  border-color: transparent;
+  color: var(--ink);
+  background: var(--paper-deep);
+}
+
+.aster-page .notes-topbar__actions .mini-menu .menu-panel {
+  top: calc(100% + 6px);
+  width: 218px;
+}
+
+.aster-page .notes-topbar__actions .mini-menu .menu-panel__label {
+  padding: 5px 8px;
+}
+
+/* Sidebar ----------------------------------------------------------------- */
+.aster-page .notes-sidebar {
+  padding: 10px 8px;
+  border-right: 1px solid var(--line);
+  background: var(--paper-soft);
+}
+
+.aster-page .notes-sidebar__top {
+  margin-bottom: 8px;
+  padding: 0 2px;
+}
+
+.aster-page .notes-create-actions {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.aster-page .notes-new-btn {
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  min-height: 28px;
+}
+
+.aster-page .notes-search .input {
+  min-height: 31px;
+  border-color: transparent;
+  background: transparent;
+  font-size: 10px;
+}
+
+.aster-page .notes-search .input:hover {
+  border-color: var(--line);
+}
+
+.aster-page .notes-search .input:focus {
+  background: var(--panel);
+}
+
+.aster-page .notes-tag-filter {
+  gap: 3px;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  border-bottom-color: var(--line);
+}
+
+.aster-page .tag-filter-btn {
+  min-height: 20px;
+  padding-inline: 6px;
+  font-size: 8.5px;
+}
+
+.aster-page .tag-filter-btn.is-active {
+  border-color: transparent;
+  color: var(--brown);
+  background: color-mix(in srgb, var(--brown) 10%, transparent);
+}
+
+.aster-page .note-list {
+  gap: 1px;
+}
+
+.aster-page .note-item {
+  min-height: 56px;
+  padding: 9px 8px;
+  border: 0;
+  border-left: 2px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.aster-page .note-item:hover {
+  background: var(--paper-deep);
+}
+
+.aster-page .note-item.is-active {
+  border-color: transparent;
+  border-left-color: var(--brown);
+  background: color-mix(in srgb, var(--brown) 9%, transparent);
+  box-shadow: none;
+}
+
+.aster-page .note-item__title {
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+.aster-page .note-item__snippet {
+  margin-top: 2px;
+  color: var(--ink-faint);
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.aster-page .note-item__meta {
+  margin-top: 3px;
+  font-size: 7.5px;
+}
+
+.aster-page .notes-sidebar__foot {
+  margin-top: 6px;
+  padding: 6px 2px 0;
+  border-top-color: var(--line);
+}
+
+.aster-page .notes-sidebar__foot .icon-btn {
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+}
+
+.aster-page .notes-search-scope {
+  margin-bottom: 7px;
+  padding: 1px;
+  border: 1px solid var(--line);
+  background: transparent;
+}
+
+.aster-page .notes-search-scope button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 24px;
+  padding: 0;
+  border: 0;
+  color: var(--ink-faint);
+  background: transparent;
+}
+
+.aster-page .notes-search-scope button .icon {
+  width: 12px;
+  height: 12px;
+}
+
+.aster-page .notes-search-scope button.is-active {
+  color: var(--brown);
+  background: color-mix(in srgb, var(--brown) 10%, transparent);
+  box-shadow: none;
+}
+
+/* Tab strip --------------------------------------------------------------- */
+.aster-page .note-tabs {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 2px;
+  min-height: 38px;
+  padding: 4px 8px 0;
+  /* Keep desktop tooltips visible; the mobile rule below restores scrolling. */
+  overflow: visible;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  scrollbar-width: none;
+}
+
+.aster-page .note-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.aster-page .note-tabs.is-empty {
+  display: none;
+}
+
+.aster-page .note-tab {
+  display: flex;
+  flex: 0 1 200px;
+  align-items: center;
+  gap: 5px;
+  min-width: 82px;
+  max-width: 200px;
+  height: 30px;
+  padding: 0 4px 0 8px;
+  border: 1px solid transparent;
+  border-bottom: 0;
+  border-radius: 5px 5px 0 0;
+  color: var(--ink-faint);
+  background: transparent;
+  cursor: pointer;
+  user-select: none;
+}
+
+.aster-page .note-tab .icon {
+  color: var(--brown-soft);
+  flex: 0 0 auto;
+}
+
+.aster-page .note-tab:hover {
+  color: var(--ink-soft);
+  background: var(--paper-soft);
+}
+
+.aster-page .note-tab.is-active {
+  border-color: var(--line);
+  color: var(--ink);
+  background: var(--paper-soft);
+}
+
+.aster-page .note-tab__title {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aster-page .note-tab__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  color: var(--ink-faint);
+  background: transparent;
+  opacity: 0;
+}
+
+.aster-page .note-tab:hover .note-tab__close,
+.aster-page .note-tab.is-active .note-tab__close,
+.aster-page .note-tab__close:focus-visible {
+  opacity: 1;
+}
+
+.aster-page .note-tab__close:hover {
+  color: var(--ink);
+  background: var(--paper-deep);
+}
+
+.aster-page .note-tab__close .icon {
+  width: 10px;
+  height: 10px;
+}
+
+/* Metadata row / editor view tabs / toolbar ------------------------------- */
+.aster-page .notes-tag-row {
+  min-height: 34px;
+  gap: 7px;
+  padding: 5px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+
+.aster-page .notes-tag-input {
+  min-height: 25px;
+  font-size: 10px;
+}
+
+.aster-page .editor-tabs {
+  gap: 2px;
+  min-height: 34px;
+  padding: 4px 9px;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+}
+
+.aster-page .editor-tab {
+  flex: 0 0 28px;
+  width: 28px;
+  min-width: 28px;
+  min-height: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  color: var(--ink-faint);
+  background: transparent;
+  box-shadow: none;
+}
+
+.aster-page .editor-tab:hover {
+  color: var(--ink);
+  background: var(--paper-deep);
+}
+
+.aster-page .editor-tab.is-active {
+  color: var(--brown);
+  background: color-mix(in srgb, var(--brown) 11%, transparent);
+  box-shadow: none;
+}
+
+.aster-page .editor-toolbar {
+  min-height: 34px;
+  gap: 4px;
+  padding: 3px 8px;
+  border-bottom: 0;
+  background: transparent;
+}
+
+.aster-page .toolbar-group {
+  gap: 1px;
+}
+
+.aster-page .toolbar-label,
+.aster-page .toolbar-divider {
+  display: none;
+}
+
+.aster-page .insert-btn,
+.aster-page .format-btn {
+  width: 26px;
+  min-width: 26px;
+  height: 26px;
+  min-height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--ink-faint);
+  box-shadow: none;
+}
+
+.aster-page .insert-btn:hover,
+.aster-page .format-btn:hover {
+  border: 0;
+  color: var(--ink);
+  background: var(--paper-deep);
+}
+
+.aster-page .insert-btn--wide {
+  padding: 0;
+}
+
+.aster-page .toolbar-more__panel {
+  display: grid;
+  width: 158px;
+  grid-template-columns: repeat(5, 26px);
+  gap: 2px;
+  padding: 4px;
+  top: calc(100% + 4px);
+  border-color: var(--line);
+  box-shadow: var(--shadow-pop);
+}
+
+.aster-page .color-btn {
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+  border-width: 2px;
+}
+
+.aster-page .preview-head {
+  min-height: 34px;
+  padding: 4px 11px;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+}
+
+.aster-page .preview-head__label {
+  gap: 0;
+}
+
+.aster-page .preview-head__label .icon {
+  width: 13px;
+  height: 13px;
+}
+
+.aster-page .preview-fullscreen-btn {
+  width: 26px;
+  min-width: 26px;
+  height: 26px;
+  min-height: 26px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.aster-page .preview-fullscreen-btn:hover {
+  border: 0;
+  background: var(--paper-deep);
+}
+
+.aster-page .cheat-sheet {
+  border-top: 1px solid var(--line);
+  background: transparent;
+}
+
+.aster-page .cheat-sheet > summary {
+  gap: 7px;
+  min-height: 32px;
+  padding: 5px 12px;
+}
+
+.aster-page .cheat-sheet > summary .chevron {
+  margin-left: auto;
+}
+
+.aster-page .mindmap-actions {
+  gap: 2px;
+}
+
+.aster-page .mindmap-actions .icon-btn {
+  width: 27px;
+  min-width: 27px;
+  height: 27px;
+  min-height: 27px;
+}
+
+.aster-page .mindmap-node-editor {
+  padding: 7px;
+  border-color: var(--line);
+  background: var(--panel);
+}
+
+.aster-page .mindmap-node-editor__row {
+  gap: 4px;
+}
+
+.aster-page .mindmap-node-editor__row .icon-btn,
+.aster-page .mindmap-node-editor__actions .icon-btn {
+  width: 26px;
+  min-width: 26px;
+  height: 26px;
+  min-height: 26px;
+}
+
+.aster-page .mindmap-node-editor__actions {
+  gap: 3px;
+}
+
+.aster-page .mindmap-detail__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+}
+
+.aster-page .mindmap-detail__close:hover {
+  background: var(--paper-deep);
+}
+
+.aster-page .inline-confirm {
+  padding: 7px 12px;
+}
+
+.aster-page .inline-confirm__actions {
+  gap: 3px;
+}
+
+.aster-page .inline-confirm__actions .icon-btn {
+  width: 26px;
+  min-width: 26px;
+  height: 26px;
+  min-height: 26px;
+}
+
+.aster-page .notes-empty-workspace .icon-btn {
+  width: 38px;
+  min-width: 38px;
+  height: 38px;
+  min-height: 38px;
+}
+
+.aster-page .notes-empty-workspace .button-row {
+  gap: 5px;
+}
+
+/* Template menu ----------------------------------------------------------- */
+.aster-page .template-menu {
+  position: relative;
+}
+
+.aster-page .template-menu > summary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  min-width: 28px;
+  height: 28px;
+  min-height: 28px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--brown);
+  list-style: none;
+  cursor: pointer;
+}
+
+.aster-page .template-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.aster-page .template-menu > summary:hover,
+.aster-page .template-menu[open] > summary {
+  color: var(--ink);
+  background: var(--paper-deep);
+}
+
+.aster-page .template-menu__panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 110;
+  width: 264px;
+  max-height: min(60vh, 470px);
+  padding: 5px;
+  overflow-y: auto;
+  border: 1px solid var(--line-strong);
+  border-radius: 9px;
+  background: var(--panel);
+  box-shadow: var(--shadow-pop);
+}
+
+.aster-page .template-menu[open] > .template-menu__panel {
+  display: block;
+}
+
+.aster-page .template-menu__eyebrow {
+  padding: 6px 8px;
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+}
+
+.aster-page .template-menu__list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.aster-page .template-menu__item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  padding: 7px 8px;
+  border: 0;
+  border-radius: 5px;
+  color: var(--ink-soft);
+  background: transparent;
+  text-align: left;
+}
+
+.aster-page .template-menu__item:hover {
+  color: var(--ink);
+  background: var(--paper-deep);
+}
+
+.aster-page .template-menu__item .icon {
+  color: var(--brown);
+  flex: 0 0 auto;
+}
+
+.aster-page .template-menu__copy {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.aster-page .template-menu__copy strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 10.5px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aster-page .template-menu__copy small {
+  overflow: hidden;
+  color: var(--ink-faint);
+  font-size: 8.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aster-page .template-menu__badge {
+  flex: 0 0 auto;
+  color: var(--brown);
+  font-family: var(--font-mono);
+  font-size: 7px;
+}
+
+.aster-page .template-menu__empty {
+  padding: 12px 8px;
+  color: var(--ink-faint);
+  font-size: 10px;
+  text-align: center;
+}
+
+.aster-page .template-menu__manage {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 8px;
+  border: 0;
+  border-top: 1px solid var(--line);
+  color: var(--brown);
+  background: transparent;
+  font-size: 9.5px;
+  text-align: left;
+}
+
+.aster-page .template-menu__manage:hover {
+  color: var(--ink);
+  background: var(--paper-deep);
+}
+
+/* Template dialog --------------------------------------------------------- */
+dialog.app-dialog.template-dialog {
+  width: min(640px, calc(100vw - 32px));
+}
+
+.template-dialog__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.template-dialog__head .dialog__eyebrow {
+  margin-bottom: 2px;
+}
+
+.template-dialog__head .dialog__title {
+  margin: 0;
+}
+
+.template-dialog .field {
+  gap: 5px;
+}
+
+.template-dialog .field > label {
+  font-size: 10.5px;
+}
+
+.template-dialog .textarea {
+  min-height: 150px;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.template-dialog__saved {
+  margin-top: 1px;
+}
+
+.custom-template-list {
+  display: flex;
+  max-height: 150px;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 7px;
+  overflow-y: auto;
+}
+
+.custom-template-list__empty {
+  margin: 0;
+  padding: 10px 0;
+  color: var(--ink-faint);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.custom-template-item {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) 26px;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 6px;
+  border-radius: 5px;
+  background: var(--paper-soft);
+}
+
+.custom-template-item__icon {
+  color: var(--brown);
+}
+
+.custom-template-item__copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.custom-template-item__copy strong {
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 10.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-template-item__copy small {
+  overflow: hidden;
+  color: var(--ink-faint);
+  font-size: 8.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.custom-template-item .icon-btn {
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  min-height: 24px;
+}
+
+.template-dialog .dialog__actions {
+  margin-top: 2px;
+}
+
+/* Fullscreen preview keeps the tab strip above the reading surface. */
+body.preview-fullscreen-open {
+  --aster-tabs-height: 44px;
+}
+
+/* The page entrance animation leaves a transform on .paper-panel; a transformed
+   ancestor would make position: fixed children (tabs and preview) relative to
+   the panel instead of the viewport. Disable it only in full-screen mode. */
+body.preview-fullscreen-open .notes-app,
+body.preview-fullscreen-open .is-ready .paper-panel {
+  animation: none !important;
+  transform: none !important;
+}
+
+body.preview-fullscreen-open .note-tabs {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1400;
+  display: flex;
+  height: var(--aster-tabs-height);
+  min-height: var(--aster-tabs-height);
+  padding: 5px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: 0 2px 12px rgba(32, 40, 44, 0.05);
+}
+
+body.preview-fullscreen-open .preview-pane.is-fullscreen {
+  inset: var(--aster-tabs-height) 0 0;
+  height: auto;
+  border-radius: 0;
+}
+
+body.preview-fullscreen-open .preview-pane.is-fullscreen .preview-head {
+  border-top: 0;
+}
+
+/* The global theme capsule becomes a single icon on the Aster workspace. */
+body.aster-page .theme-dock > summary {
+  width: 30px;
+  min-width: 30px;
+  min-height: 30px;
+  padding: 0;
+  gap: 0;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.aster-page .theme-dock__text,
+body.aster-page .theme-dock__sep,
+body.aster-page .theme-dock__current,
+body.aster-page .theme-dock__chevron {
+  display: none;
+}
+
+body.aster-page .theme-dock > summary:hover,
+body.aster-page .theme-dock[open] > summary {
+  border-color: transparent;
+  background: var(--paper-deep);
+}
+
+body.aster-page .theme-dock > summary .icon {
+  width: 15px;
+  height: 15px;
+}
+
+/* Mobile refinements ------------------------------------------------------ */
+@media (max-width: 760px) {
+  .aster-page .notes-topbar {
+    min-height: 50px;
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  .aster-page .notes-title-field {
+    min-height: 32px;
+    font-size: 18px;
+  }
+
+  .aster-page .notes-topbar__actions {
+    gap: 1px;
+    padding-top: 0;
+  }
+
+  .aster-page .notes-topbar__actions .save-status {
+    min-width: 48px;
+    font-size: 8.5px;
+  }
+
+  .aster-page .notes-topbar__actions .icon-btn,
+  .aster-page .notes-topbar__actions .mini-menu > summary {
+    width: 28px;
+    min-width: 28px;
+    height: 28px;
+    min-height: 28px;
+  }
+
+  .aster-page .notes-sidebar {
+    padding: 9px 8px;
+  }
+
+  .aster-page .notes-tag-row {
+    gap: 4px;
+    padding: 5px 10px;
+  }
+
+  .aster-page .editor-tabs {
+    padding-inline: 8px;
+  }
+
+  .aster-page .editor-toolbar {
+    gap: 2px;
+    padding: 3px 6px;
+  }
+
+  .aster-page .insert-btn,
+  .aster-page .format-btn {
+    width: 25px;
+    min-width: 25px;
+    height: 25px;
+    min-height: 25px;
+  }
+
+  .aster-page .note-tabs {
+    min-height: 36px;
+    padding: 4px 6px 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .aster-page .note-tab {
+    flex-basis: 148px;
+    height: 28px;
+    min-width: 74px;
+    padding-left: 6px;
+  }
+
+  .aster-page .note-tab__close {
+    opacity: 0.72;
+  }
+
+  .aster-page .template-menu__panel {
+    right: 0;
+    left: auto;
+    width: min(264px, calc(100vw - 42px));
+  }
+
+  dialog.app-dialog.template-dialog {
+    width: calc(100vw - 20px);
+  }
+
+  .template-dialog .dialog__form {
+    gap: 11px;
+    padding: 19px 16px;
+  }
+
+  .template-dialog .textarea {
+    min-height: 135px;
+  }
+
+  .aster-page .mindmap-node-editor__row {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .aster-page .mindmap-node-editor__row .icon-btn {
+    justify-self: start;
+  }
+
+  body.preview-fullscreen-open {
+    --aster-tabs-height: 42px;
+  }
+
+  body.preview-fullscreen-open .note-tabs {
+    padding: 4px 8px;
+  }
+
+  body.preview-fullscreen-open .note-tab {
+    flex-basis: 140px;
+    height: 30px;
+  }
+}
+
+/* Keep the empty state's new icon-only actions compact. */
+.aster-page .notes-empty-workspace .button-row .icon-btn {
+  border-color: var(--line);
+  background: var(--panel);
+}
+
+.aster-page .notes-empty-workspace .button-row .icon-btn:hover {
+  border-color: var(--brown-soft);
+  background: var(--paper-soft);
+}
+
